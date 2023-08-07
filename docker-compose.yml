@@ -1,0 +1,19 @@
+version: "3.7"
+services:
+    app:
+        build:
+            args:
+                user: pitter #utilizar o mesmo usuário do WSL
+                uid: 1000
+            context: .
+            dockerfile: .docker/Dockerfile
+        image: "laravelapp"
+        ports:
+            - 8080:80
+            - 8000:8000
+        volumes:
+            - ./:/var/www/html
+networks:
+    default:
+        external: true
+        name: banco_default
