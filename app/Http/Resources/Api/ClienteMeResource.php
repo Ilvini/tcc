@@ -17,8 +17,7 @@ class ClienteMeResource extends JsonResource
         return [
             'nome' => $this->nome,
             'email' => $this->email,
-            'telefone' => $this->celular,
-            'ultimo_pedido' => null,
+            'celular' => $this->celular,
         ];
     }
 }

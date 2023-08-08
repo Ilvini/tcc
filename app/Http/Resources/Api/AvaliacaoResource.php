@@ -4,7 +4,7 @@ namespace App\Http\Resources\Api;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ListPlacesResource extends JsonResource
+class AvaliacaoResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,11 +15,9 @@ class ListPlacesResource extends JsonResource
     public function toArray($request)
     {
         return [
-            "fsq_id" => $this->fsq_id,
-            'latitude' => $this->geocodes->main->latitude,
-            'longitude' => $this->geocodes->main->longitude,
-            'name' => $this->name,
-            'imagem' => isset($this->photos[0]) ? $this->photos[0]->prefix . 'original' . $this->photos[0]->suffix : null,
+            'id' => $this->id,
+            'estrelas' => $this->estrelas,
+            'comentario' => $this->comentario,
         ];
     }
 }

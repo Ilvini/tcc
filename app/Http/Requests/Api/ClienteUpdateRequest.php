@@ -28,7 +28,7 @@ class ClienteUpdateRequest extends FormRequest
         return [
             'nome' => 'required|string',
             'email' => 'required|string|email|unique:clientes,email,' . auth()->user()->id,
-            'telefone' => 'required|string',
+            'celular' => 'required|string',
         ];
     }
 
@@ -46,8 +46,8 @@ class ClienteUpdateRequest extends FormRequest
             'email.string' => 'O campo email deve ser uma string',
             'email.email' => 'O campo email deve ser um email válido',
             'email.unique' => 'O email informado já está em uso',
-            'telefone.required' => 'O campo telefone é obrigatório',
-            'telefone.string' => 'O campo telefone deve ser uma string',
+            'celular.required' => 'O campo celular é obrigatório',
+            'celular.string' => 'O campo celular deve ser uma string',
         ];
     }
 

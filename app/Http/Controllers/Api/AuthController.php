@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\ClienteLoginRequest;
 use App\Http\Requests\Api\ClienteNovaSenhaRequest;
-use App\Http\Requests\Api\ClienteRegistroRequest;
 use App\Http\Requests\Api\NovaSenhaRequest;
 use App\Http\Requests\Api\RecuperaSenhaRequest;
 use App\Models\Cliente;
@@ -15,21 +14,6 @@ use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
-    public function register(ClienteRegistroRequest $request)
-    {
-        try {
-            $cliente = Cliente::create($request->validated());
-
-            return apiResponse(false, 'Sem erros', [
-                'token' => $cliente->createToken('api')->plainTextToken,
-                'nome' => $cliente->nome,
-            ]);
-        } catch (\Throwable $th) {
-            Log::error($th);
-            return apiResponse(true, 'Erro interno', null, 500);
-        }
-    }
-
     public function login(ClienteLoginRequest $request)
     {
         try {

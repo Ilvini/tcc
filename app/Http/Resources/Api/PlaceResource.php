@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Api;
 
+use App\Models\Avaliacao;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PlaceResource extends JsonResource
@@ -14,6 +15,8 @@ class PlaceResource extends JsonResource
      */
     public function toArray($request)
     {
+        $avaliacoes = Avaliacao::where('fsq_id', $this->fsq_id)->get();
+
         return [
             "fsq_id" => $this->fsq_id,
             'nome' => $this->name,
@@ -25,6 +28,7 @@ class PlaceResource extends JsonResource
             'rua' => $this->location->cross_street ?? null,
             'endereco_completo' => $this->location->formatted_address,
             'photos' => $this->photos ? PlacePhotosResource::collection($this->photos) : [],
+            'avaliacoes' => AvaliacaoResource::collection($avaliacoes),
         ];
     }
 }
