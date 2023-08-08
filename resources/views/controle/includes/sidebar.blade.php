@@ -75,87 +75,6 @@ $sidebarClass = !empty($sidebarTransparent) ? 'sidebar-transparent' : '';
 				</a>
 			</li>
 
-            @can('Visualizar Categorias')
-                <li class="has-sub {{ activeMenu('controle.categorias') }}">
-                    <a href="{{ route('controle.categorias.index') }}">
-                        <i class="fas fa-cube"></i>
-                        <span>Categorias</span>
-                    </a>
-                </li>
-            @endcan
-
-            @can('Visualizar Tags')
-                <li class="has-sub {{ activeMenu('controle.tags') }}">
-                    <a href="{{ route('controle.tags.index') }}">
-                        <i class="fas fa-tag"></i>
-                        <span>Tags</span>
-                    </a>
-                </li>
-            @endcan
-            
-            @can('Visualizar Marcas')
-                <li class="has-sub {{ activeMenu('controle.marcas') }}">
-                    <a href="{{ route('controle.marcas.index') }}">
-                        <i class="far fa-registered"></i>
-                        <span>Marcas</span>
-                    </a>
-                </li>
-            @endcan
-            
-            @can('Visualizar Produtos')
-                <li class="has-sub {{ activeMenu('controle.produtos') }}">
-                    <a href="{{ route('controle.produtos.index') }}">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span>Produtos</span>
-                    </a>
-                </li>
-            @endcan
-            
-            @can('Visualizar Combos')
-                <li class="has-sub {{ activeMenu('controle.combos') }}">
-                    <a href="{{ route('controle.combos.index') }}">
-                        <i class="fas fa-shapes"></i>
-                        <span>Combos</span>
-                    </a>
-                </li>
-            @endcan
-
-            @can('Visualizar Pedidos')
-                <li class="has-sub {{ activeMenu('controle.pedidos') }}">
-                    <a href="{{ route('controle.pedidos.index') }}">
-                        <i class="fas fa-receipt"></i>
-                        <span>Pedidos</span>
-                    </a>
-                </li>
-            @endcan
-
-            @can('Visualizar Cupons')
-                <li class="has-sub {{ activeMenu('controle.cupoms') }}">
-                    <a href="{{ route('controle.cupoms.index') }}">
-                        <i class="fas fa-certificate"></i>
-                        <span>Cupons de Desconto</span>
-                    </a>
-                </li>
-            @endcan
-
-            @can('Visualizar Depoimentos')
-                <li class="has-sub {{ activeMenu('controle.depoimentos') }}">
-                    <a href="{{ route('controle.depoimentos.index') }}">
-                        <i class="fas fa-hand-holding-heart"></i>
-                        <span>Depoimentos</span>
-                    </a>
-                </li>
-            @endcan
-            
-            @can('Visualizar Publicações do Instagram')
-                <li class="has-sub {{ activeMenu('controle.instagram') }}">
-                    <a href="{{ route('controle.instagram.index') }}">
-                        <i class="fab fa-instagram"></i>
-                        <span>Publicações do Instagram</span>
-                    </a>
-                </li>
-            @endcan
-
             @can('Visualizar usuário')
                 <li
                     class="has-sub {{ activeMenu(['controle.usuario', 'controle.roles']) }}">
@@ -186,15 +105,6 @@ $sidebarClass = !empty($sidebarTransparent) ? 'sidebar-transparent' : '';
                     <a href="{{ route('controle.config.edit') }}">
                         <i class="fas fa-cog"></i>
                         <span>Configurações</span>
-                    </a>
-                </li>
-            @endcan
-
-            @can('Alterar Empresa')
-                <li class="has-sub {{ activeMenu('controle.empresa') }}">
-                    <a href="{{ route('controle.empresa.edit') }}">
-                        <i class="fas fa-cog"></i>
-                        <span>Dados da Empresa</span>
                     </a>
                 </li>
             @endcan
