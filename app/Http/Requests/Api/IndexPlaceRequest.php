@@ -26,7 +26,8 @@ class IndexPlaceRequest extends FormRequest
     public function rules()
     {
         return [
-            'll' => 'required',
+            'lat' => 'required',
+            'lon' => 'required',
             'radius' => 'required',
         ];
     }

@@ -32,11 +32,13 @@ class FoursquareService
         ]);
     }
 
-    public function placeSearch($ll, $radius = 1000)
+    public function placeSearch($lat, $lon, $radius = 1000)
     {
         $categorias = '10000,13000,14000,16000,18000,19000';
 
         $fields = 'fsq_id,name,geocodes,photos,popularity';
+
+        $ll = "{$lat},{$lon}";
 
         $uri = "https://api.foursquare.com/v3/places/search?fields={$fields}&categories={$categorias}&ll={$ll}&radius={$radius}";
         

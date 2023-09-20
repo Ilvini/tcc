@@ -17,10 +17,11 @@ class HomeController extends Controller
 
             $foursquareService = new FoursquareService();
 
-            $ll = $request->ll;
+            $lat = $request->lat;
+            $lon = $request->lon;
             $radius = $request->radius;
             
-            $results = $foursquareService->placeSearch($ll, $radius);
+            $results = $foursquareService->placeSearch($lat, $lon, $radius);
 
             if ($results->status == 200) {
 
