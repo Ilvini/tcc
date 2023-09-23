@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\AvaliacaoController;
 use App\Http\Controllers\Api\ClienteController;
 use App\Http\Controllers\Api\HomeController;
+use App\Http\Controllers\Api\WikipediaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,6 +17,9 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::get('/wikipedia/buscar', [WikipediaController::class, 'index'])->name('api.wikipedia.buscar');
+Route::get('/wikipedia/detalhe', [WikipediaController::class, 'detalhe'])->name('api.wikipedia.detalhe');
 
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/cliente/novo', [ClienteController::class, 'register']);
