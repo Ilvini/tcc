@@ -1,0 +1,91 @@
+<?php
+
+namespace App\Http\Controllers\Controle;
+
+use App\Http\Controllers\Controller;
+use App\Models\Categoria;
+use App\Models\PontoTuristico;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+
+class PontoTuristicoController extends Controller
+{
+    public function index()
+    {
+        $pontoTuristicos = PontoTuristico::paginate(20);
+
+        return view('controle.pontos-turisticos.index', compact('pontoTuristicos'));
+    }
+
+    public function create()
+    {
+        $dbCategorias = Categoria::with('subcategorias')->orderBy('ordem')->get();
+        $categorias = [];
+        foreach ($dbCategorias as $dbCategoria) {
+            $categorias[$dbCategoria->nome] = $dbCategoria->subcategorias->pluck('nome', 'id')->toArray();
+        }
+
+        return view('controle.pontos-turisticos.form', compact('categorias'));
+    }
+
+    public function store(Request $request)
+    {
+        try {
+
+            $input = $request->all();
+
+            PontoTuristico::create($input);
+    
+            return redirect()->route('controle.pontos-turisticos.index')->with('success', 'Ponto turístico cadastrado com sucesso!');
+
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return redirect()->back()->with('error', 'Erro ao cadastrar ponto turístico!')->withInput($input);
+        }
+    }
+
+    public function edit($id)
+    {
+        $pontoTuristico = PontoTuristico::findOrFail($id);
+
+        $dbCategorias = Categoria::with('subcategorias')->orderBy('ordem')->get();
+        $categorias = [];
+        foreach ($dbCategorias as $dbCategoria) {
+            $categorias[$dbCategoria->nome] = $dbCategoria->subcategorias->pluck('nome', 'id')->toArray();
+        }
+
+        return view('controle.pontos-turisticos.form', compact('pontoTuristico', 'categorias'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        try {
+
+            $input = $request->all();
+
+            $pontoTuristico = PontoTuristico::findOrFail($id);
+            $pontoTuristico->update($input);
+    
+            return redirect()->route('controle.pontos-turisticos.index')->with('success', 'Ponto turístico atualizado com sucesso!');
+
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return redirect()->back()->with('error', 'Erro ao atualizar ponto turístico!')->withInput($input);
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+
+            $pontoTuristico = PontoTuristico::findOrFail($id);
+            $pontoTuristico->delete();
+    
+            return redirect()->route('controle.pontos-turisticos.index')->with('success', 'Ponto turístico excluído com sucesso!');
+
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return redirect()->back()->with('error', 'Erro ao excluir ponto turístico!');
+        }
+    }
+}

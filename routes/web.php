@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Controle\DashboardController;
+use App\Http\Controllers\Controle\PontoTuristicoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,12 +35,12 @@ Route::group([
     /*--------------------------------------------------------------------------
     | Rotas do controle
     |--------------------------------------------------------------------------*/
-    // Route::controller(CategoriaController::class)->prefix('categorias')->name('categorias.')->group(function () {
-    //     Route::get('/', 'index')->middleware('permission:Visualizar Categorias')->name('index');
-    //     Route::get('/criar', 'create')->middleware('permission:Cadastrar Categorias')->name('create');
-    //     Route::post('/salvar', 'store')->middleware('permission:Cadastrar Categorias')->name('store');
-    //     Route::get('/editar/{id}', 'edit')->middleware('permission:Alterar Categorias')->name('edit');
-    //     Route::post('/alterar/{id}', 'update')->middleware('permission:Alterar Categorias')->name('update');
-    //     Route::get('/excluir/{id}', 'delete')->middleware('permission:Excluir Categorias')->name('delete');
-    // });
+    Route::controller(PontoTuristicoController::class)->prefix('pontos-turisticos')->name('pontos-turisticos.')->group(function () {
+        Route::get('/', 'index')->middleware('permission:Visualizar Pontos Turísticos')->name('index');
+        Route::get('/criar', 'create')->middleware('permission:Cadastrar Pontos Turísticos')->name('create');
+        Route::post('/salvar', 'store')->middleware('permission:Cadastrar Pontos Turísticos')->name('store');
+        Route::get('/editar/{id}', 'edit')->middleware('permission:Alterar Pontos Turísticos')->name('edit');
+        Route::post('/alterar/{id}', 'update')->middleware('permission:Alterar Pontos Turísticos')->name('update');
+        Route::get('/excluir/{id}', 'delete')->middleware('permission:Excluir Pontos Turísticos')->name('delete');
+    });
 });
