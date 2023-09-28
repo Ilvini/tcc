@@ -88,4 +88,37 @@ class PontoTuristicoController extends Controller
             return redirect()->back()->with('error', 'Erro ao excluir ponto turístico!');
         }
     }
+
+    public function horarios($id)
+    {
+        $pontoTuristico = PontoTuristico::findOrFail($id);
+
+        return view('controle.pontos-turisticos.horarios', compact('pontoTuristico'));
+    }
+
+    public function updateHorarios(Request $request, $id)
+    {
+        try {
+
+            $input = $request->all();
+
+            $pontoTuristico = PontoTuristico::findOrFail($id);
+
+            foreach ($input['horarios'] as $dia => $horario) {
+                $pontoTuristico->horarios()->updateOrCreate([
+                    'dia_semana' => $dia + 1,
+                ], [
+                    'abertura' => isset($horario['dia_todo']) ? null : $horario['abertura'],
+                    'fechamento' => isset($horario['dia_todo']) ? null : $horario['fechamento'],
+                    'dia_todo' => $horario['dia_todo'] ?? false,
+                ]);
+            }
+    
+            return redirect()->back()->with('success', 'Horários atualizados com sucesso!');
+
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return redirect()->back()->with('error', 'Erro ao atualizar horários!')->withInput($input);
+        }
+    }
 }

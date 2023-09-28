@@ -47,6 +47,11 @@
                                     <td>{{ $pontoTuristico->endereco }}</td>
                                     <td>{{ $pontoTuristico->subcategoria->categoria->nome }} > {{ $pontoTuristico->subcategoria->nome }}</td>
                                     <td>
+                                        <a href="{{ route('controle.pontos-turisticos.horarios', $pontoTuristico->id) }}"
+                                            class="btn btn-secondary btn-sm">
+                                            <i class="fa fa-clock"></i>
+                                            Horários
+                                        </a>
                                         <a href="{{ route('controle.pontos-turisticos.edit', $pontoTuristico->id) }}"
                                             class="btn btn-primary btn-sm">
                                             <i class="fa fa-edit"></i>

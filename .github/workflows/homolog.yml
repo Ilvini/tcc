@@ -8,7 +8,7 @@ on:
       sync:
           description: "File synchronization"
           required: true
-          default: "full"
+          default: "delta"
 
 jobs:
   deploy-homolog:
@@ -32,4 +32,4 @@ jobs:
           remote-port: "65002"
           remote-password: '${{ secrets.FTP_HOMOLOG_PASS }}'
           remote-path: "/home/u539902968/domains/pwasolutions.tech/public_html/myplaces2go"
-          sync: "full"
+          sync: "delta"

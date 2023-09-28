@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Ramsey\Uuid\Uuid;
 
-class PontoTuristico extends Model
+class PontoSugerido extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'subcategoria_id',
+        'cliente_id',
         'fsq_id',
         'nome',
         'endereco',
@@ -21,12 +22,12 @@ class PontoTuristico extends Model
 
     protected static function booted()
     {
-        static::creating(fn (PontoTuristico $pontoTuristico) => $pontoTuristico->uuid = (string) Uuid::uuid4());
+        static::creating(fn (PontoSugerido $pontoSugerido) => $pontoSugerido->uuid = (string) Uuid::uuid4());
     }
 
     public function imagens()
     {
-        return $this->hasMany(PontoTuristicoImagem::class);
+        return $this->hasMany(PontoSugeridoImagem::class);
     }
 
     public function subcategoria()
@@ -34,8 +35,13 @@ class PontoTuristico extends Model
         return $this->belongsTo(Subcategoria::class);    
     }
 
+    public function cliente()
+    {
+        return $this->belongsTo(Cliente::class);    
+    }
+
     public function horarios()
     {
-        return $this->hasMany(PontoTuristicoHorario::class);
+        return $this->hasMany(PontoSugeridoHorario::class);
     }
 }

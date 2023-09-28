@@ -42,5 +42,8 @@ Route::group([
         Route::get('/editar/{id}', 'edit')->middleware('permission:Alterar Pontos Turísticos')->name('edit');
         Route::post('/alterar/{id}', 'update')->middleware('permission:Alterar Pontos Turísticos')->name('update');
         Route::get('/excluir/{id}', 'delete')->middleware('permission:Excluir Pontos Turísticos')->name('delete');
+
+        Route::get('/horarios/{id}', 'horarios')->middleware('permission:Alterar Pontos Turísticos')->name('horarios');
+        Route::post('/horarios/{id}', 'updateHorarios')->middleware('permission:Alterar Pontos Turísticos')->name('updateHorarios');
     });
 });
