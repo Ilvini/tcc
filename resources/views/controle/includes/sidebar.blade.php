@@ -93,6 +93,15 @@ $sidebarClass = !empty($sidebarTransparent) ? 'sidebar-transparent' : '';
                 </li>
             @endcan
 
+            @can('Visualizar Informações Adicionais')
+                <li class="has-sub {{ activeMenu('controle.informacoes') }}">
+                    <a href="{{ route('controle.informacoes.index') }}">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Informações Adicionais</span>
+                    </a>
+                </li>
+            @endcan
+
             @can('Visualizar usuário')
                 <li
                     class="has-sub {{ activeMenu(['controle.usuario', 'controle.roles']) }}">

@@ -28,3 +28,16 @@ if (!function_exists('diaSemana')) {
         }
     }
 }
+
+if (!function_exists('tipoInformacao')) {
+    function tipoInformacao() {
+        return [
+            'Descricao',
+            'Curiosidade',
+            'Dica',
+            'Historia',
+            'Lenda',
+            'Outro',
+        ];
+    }
+}

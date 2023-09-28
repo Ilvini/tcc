@@ -21,6 +21,9 @@ class PontoTuristicoResource extends JsonResource
             'endereco' => $this->endereco,
             'lat' => $this->lat,
             'lon' => $this->lon,
+            'avaliacao_media' => $this->avaliacoes->avg('estrelas'),
+            'avaliacoes' => AvaliacaoResource::collection($this->avaliacoes),
+            'informacoes-adicionais' => InformacaoResource::collection($this->informacoes)->collection->groupBy('tipo'),
         ];
     }
 }

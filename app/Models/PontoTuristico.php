@@ -43,4 +43,9 @@ class PontoTuristico extends Model
     {
         return $this->hasMany(PontoTuristicoAvaliacao::class);
     }
+
+    public function informacoes()
+    {
+        return $this->hasMany(PontoTuristicoInformacao::class);
+    }
 }

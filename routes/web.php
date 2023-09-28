@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Controle\AvaliacaoController;
 use App\Http\Controllers\Controle\DashboardController;
+use App\Http\Controllers\Controle\InformacaoController;
 use App\Http\Controllers\Controle\PontoTuristicoController;
 use Illuminate\Support\Facades\Route;
 
@@ -55,5 +56,14 @@ Route::group([
         Route::get('/', 'index')->middleware('permission:Visualizar Avalições')->name('index');
         Route::get('/aprovar/{id}', 'aprovar')->middleware('permission:Aprovar Avalições')->name('aprovar');
         Route::get('/reprovar/{id}', 'reprovar')->middleware('permission:Reprovar Avalições')->name('reprovar');
+    });
+
+    /*--------------------------------------------------------------------------
+    | Rotas de Informações
+    |--------------------------------------------------------------------------*/
+    Route::controller(InformacaoController::class)->prefix('informacoes')->name('informacoes.')->group(function () {
+        Route::get('/', 'index')->middleware('permission:Visualizar Informações Adicionais')->name('index');
+        Route::get('/aprovar/{id}', 'aprovar')->middleware('permission:Aprovar Informações Adicionais')->name('aprovar');
+        Route::get('/reprovar/{id}', 'reprovar')->middleware('permission:Reprovar Informações Adicionais')->name('reprovar');
     });
 });
