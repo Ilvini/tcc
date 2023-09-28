@@ -3,7 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\AvaliacaoController;
 use App\Http\Controllers\Api\ClienteController;
-use App\Http\Controllers\Api\HomeController;
+use App\Http\Controllers\Api\PontoTuristicoController;
 use App\Http\Controllers\Api\WikipediaController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,8 +24,8 @@ Route::get('/wikipedia/detalhe', [WikipediaController::class, 'detalhe'])->name(
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/cliente/novo', [ClienteController::class, 'register']);
 
-Route::get('/pontos-turisticos', [HomeController::class, 'index']);
-Route::get('/pontos-turisticos/{fsq_id}', [HomeController::class, 'detalhe']);
+Route::get('/pontos-turisticos', [PontoTuristicoController::class, 'index']);
+Route::get('/pontos-turisticos/{uuid}', [PontoTuristicoController::class, 'detalhe']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cliente/me', [ClienteController::class, 'me']);
@@ -35,8 +35,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::post('/auth/check-token', [AuthController::class, 'checarToken']);
 
-    Route::get('/pontos-turisticos/{fsq_id}/avaliacoes', [AvaliacaoController::class, 'index']);
-    Route::post('/pontos-turisticos/{fsq_id}/avaliacoes/novo', [AvaliacaoController::class, 'create']);
+    Route::post('/pontos-turisticos', [PontoTuristicoController::class, 'create']);
+
+    Route::get('/pontos-turisticos/{uuid}/avaliacoes', [AvaliacaoController::class, 'index']);
+    Route::post('/pontos-turisticos/{uuid}/avaliacoes/novo', [AvaliacaoController::class, 'create']);
 });
 
 Route::post('/recuperar-senha', [AuthController::class, 'recuperarSenha']);

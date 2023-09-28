@@ -38,4 +38,9 @@ class PontoTuristico extends Model
     {
         return $this->hasMany(PontoTuristicoHorario::class);
     }
+
+    public function avaliacoes()
+    {
+        return $this->hasMany(PontoTuristicoAvaliacao::class);
+    }
 }

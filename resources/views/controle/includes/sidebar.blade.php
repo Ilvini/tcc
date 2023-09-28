@@ -83,6 +83,15 @@ $sidebarClass = !empty($sidebarTransparent) ? 'sidebar-transparent' : '';
                     </a>
                 </li>
             @endcan
+            
+            @can('Visualizar Avaliações')
+                <li class="has-sub {{ activeMenu('controle.avaliacoes') }}">
+                    <a href="{{ route('controle.avaliacoes.index') }}">
+                        <i class="fas fa-star"></i>
+                        <span>Avaliações</span>
+                    </a>
+                </li>
+            @endcan
 
             @can('Visualizar usuário')
                 <li

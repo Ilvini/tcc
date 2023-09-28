@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Controle\AvaliacaoController;
 use App\Http\Controllers\Controle\DashboardController;
 use App\Http\Controllers\Controle\PontoTuristicoController;
 use Illuminate\Support\Facades\Route;
@@ -33,7 +34,7 @@ Route::group([
     Route::post('ordenacao', [DashboardController::class, 'ordenacao'])->name('ordenacao');
 
     /*--------------------------------------------------------------------------
-    | Rotas do controle
+    | Rotas de Pontos Turisticos
     |--------------------------------------------------------------------------*/
     Route::controller(PontoTuristicoController::class)->prefix('pontos-turisticos')->name('pontos-turisticos.')->group(function () {
         Route::get('/', 'index')->middleware('permission:Visualizar Pontos Turísticos')->name('index');
@@ -45,5 +46,14 @@ Route::group([
 
         Route::get('/horarios/{id}', 'horarios')->middleware('permission:Alterar Pontos Turísticos')->name('horarios');
         Route::post('/horarios/{id}', 'updateHorarios')->middleware('permission:Alterar Pontos Turísticos')->name('updateHorarios');
+    });
+    
+    /*--------------------------------------------------------------------------
+    | Rotas de Avaliações
+    |--------------------------------------------------------------------------*/
+    Route::controller(AvaliacaoController::class)->prefix('avaliacoes')->name('avaliacoes.')->group(function () {
+        Route::get('/', 'index')->middleware('permission:Visualizar Avalições')->name('index');
+        Route::get('/aprovar/{id}', 'aprovar')->middleware('permission:Aprovar Avalições')->name('aprovar');
+        Route::get('/reprovar/{id}', 'reprovar')->middleware('permission:Reprovar Avalições')->name('reprovar');
     });
 });

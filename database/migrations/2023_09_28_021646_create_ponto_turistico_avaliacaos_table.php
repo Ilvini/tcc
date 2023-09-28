@@ -13,12 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('avaliacaos', function (Blueprint $table) {
+        Schema::create('ponto_turistico_avaliacaos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('cliente_id')->constrained();
-            $table->string('fsq_id');
+            $table->foreignId('ponto_turistico_id')->constrained();
             $table->integer('estrelas');
             $table->text('comentario')->nullable();
+            $table->boolean('aprovado')->default(false);
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('avaliacaos');
+        Schema::dropIfExists('ponto_turistico_avaliacaos');
     }
 };
