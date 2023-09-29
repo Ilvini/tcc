@@ -14,16 +14,24 @@ class PontoTuristicoResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-            'uuid' => $this->uuid,
-            'fsq_id' => $this->fsq_id,
-            'nome' => $this->nome,
-            'endereco' => $this->endereco,
-            'lat' => $this->lat,
-            'lon' => $this->lon,
-            'avaliacao_media' => $this->avaliacoes->avg('estrelas'),
-            'avaliacoes' => AvaliacaoResource::collection($this->avaliacoes),
-            'informacoes-adicionais' => InformacaoResource::collection($this->informacoes)->collection->groupBy('tipo'),
-        ];
+        if (isset($this->uuid)) {
+            return [
+                'uuid' => $this->uuid,
+                'nome' => $this->nome,
+                'endereco' => $this->endereco,
+                'avaliacao_media' => $this->avaliacoes->avg('estrelas'),
+                'avaliacoes' => AvaliacaoResource::collection($this->avaliacoes),
+                'informacoes_adicionais' => InformacaoResource::collection($this->informacoes)->collection->groupBy('tipo'),
+            ];
+        } else {
+            return [
+                'uuid' => $this->fsq_id,
+                'nome' => $this->name,
+                'endereco' => $this->location->formatted_address,
+                'avaliacao_media' => $this->rating / 2,
+                'avaliacoes' => [],
+                'informacoes_adicionais' => [],
+            ];
+        }
     }
 }

@@ -47,9 +47,6 @@ class ClienteNovaSenhaRequest extends FormRequest
 
     public function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException(apiResponse(true, $validator->errors()->first(), [
-            'titulo' => 'Campo inválido',
-            'descricao' => $validator->errors()->first(),
-        ], 422));
+        throw new HttpResponseException(apiResponse(true, $validator->errors()->first(), [], 422));
     }
 }

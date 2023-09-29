@@ -34,6 +34,9 @@ class PontoTuristicoController extends Controller
 
             $input = $request->all();
 
+            $input['lat'] = round($input['lat'], 6);
+            $input['lon'] = round($input['lon'], 6);
+
             PontoTuristico::create($input);
     
             return redirect()->route('controle.pontos-turisticos.index')->with('success', 'Ponto turístico cadastrado com sucesso!');
@@ -62,6 +65,9 @@ class PontoTuristicoController extends Controller
         try {
 
             $input = $request->all();
+
+            $input['lat'] = round($input['lat'], 6);
+            $input['lon'] = round($input['lon'], 6);
 
             $pontoTuristico = PontoTuristico::findOrFail($id);
             $pontoTuristico->update($input);

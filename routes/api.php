@@ -28,6 +28,8 @@ Route::post('/cliente/novo', [ClienteController::class, 'register']);
 Route::get('/pontos-turisticos', [PontoTuristicoController::class, 'index']);
 Route::get('/pontos-turisticos/{uuid}', [PontoTuristicoController::class, 'detalhe']);
 
+Route::get('/pontos-turisticos-categorias', [PontoTuristicoController::class, 'categorias']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cliente/me', [ClienteController::class, 'me']);
     Route::put('/cliente/alterar', [ClienteController::class, 'update']);

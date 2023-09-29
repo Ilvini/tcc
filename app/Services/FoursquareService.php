@@ -13,6 +13,7 @@ class FoursquareService
         $response = Http::withoutVerifying()
         ->withHeaders([
             'Authorization' => env('FOURSQUARE_API_KEY'),
+            'Accept-Language' => 'pt',
             'accept' => 'application/json'
         ])
         ->withOptions(["verify"=>false])
@@ -32,15 +33,14 @@ class FoursquareService
         ]);
     }
 
-    public function placeSearch($lat, $lon, $radius = 1000)
+    public function placeSearch($lat, $lon, $radius = 1000, $categorias = '10000,13000,14000,16000,18000,19000')
     {
-        $categorias = '10000,13000,14000,16000,18000,19000';
 
-        $fields = 'fsq_id,name,geocodes,photos,popularity';
+        $fields = 'fsq_id,name,geocodes,categories';
 
         $ll = "{$lat},{$lon}";
 
-        $uri = "https://api.foursquare.com/v3/places/search?fields={$fields}&categories={$categorias}&ll={$ll}&radius={$radius}";
+        $uri = "https://api.foursquare.com/v3/places/search?fields={$fields}&categories={$categorias}&ll={$ll}&radius={$radius}&limit=50";
         
         return $this->request('get', $uri, []);
     }

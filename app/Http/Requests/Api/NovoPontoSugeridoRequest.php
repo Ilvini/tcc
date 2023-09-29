@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class ClienteUpdateRequest extends FormRequest
+class NovoPontoSugeridoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,9 +26,11 @@ class ClienteUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'nome' => 'required|string',
-            'email' => 'required|string|email|unique:clientes,email,' . auth()->user()->id,
-            'celular' => 'required|string',
+            'subcategoria_id' => 'required|exists:subcategorias,id',
+            'nome' => 'required|string|max:255',
+            'endereco' => 'required|string',
+            'lat' => 'required|numeric',
+            'lon' => 'required|numeric',
         ];
     }
 
@@ -40,14 +42,17 @@ class ClienteUpdateRequest extends FormRequest
     public function messages()
     {
         return [
+            'subcategoria_id.required' => 'O campo subcategoria_id é obrigatório',
+            'subcategoria_id.exists' => 'O campo subcategoria_id deve ser um id de subcategoria válido',
             'nome.required' => 'O campo nome é obrigatório',
             'nome.string' => 'O campo nome deve ser uma string',
-            'email.required' => 'O campo email é obrigatório',
-            'email.string' => 'O campo email deve ser uma string',
-            'email.email' => 'O campo email deve ser um email válido',
-            'email.unique' => 'O email informado já está em uso',
-            'celular.required' => 'O campo celular é obrigatório',
-            'celular.string' => 'O campo celular deve ser uma string',
+            'nome.max' => 'O campo nome deve ter no máximo 255 caracteres',
+            'endereco.required' => 'O campo endereco é obrigatório',
+            'endereco.string' => 'O campo endereco deve ser uma string',
+            'lat.required' => 'O campo lat é obrigatório',
+            'lat.numeric' => 'O campo lat deve ser um número',
+            'lon.required' => 'O campo lon é obrigatório',
+            'lon.numeric' => 'O campo lon deve ser um número',
         ];
     }
 

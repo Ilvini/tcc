@@ -84,6 +84,15 @@ $sidebarClass = !empty($sidebarTransparent) ? 'sidebar-transparent' : '';
                 </li>
             @endcan
             
+            @can('Visualizar Pontos Sugeridos')
+                <li class="has-sub {{ activeMenu('controle.pontos-sugeridos') }}">
+                    <a href="{{ route('controle.pontos-sugeridos.index') }}">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Pontos Sugeridos</span>
+                    </a>
+                </li>
+            @endcan
+            
             @can('Visualizar Avaliações')
                 <li class="has-sub {{ activeMenu('controle.avaliacoes') }}">
                     <a href="{{ route('controle.avaliacoes.index') }}">

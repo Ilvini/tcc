@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Ramsey\Uuid\Uuid;
 
 class PontoSugerido extends Model
 {
@@ -19,11 +18,6 @@ class PontoSugerido extends Model
         'lat',
         'lon',
     ];
-
-    protected static function booted()
-    {
-        static::creating(fn (PontoSugerido $pontoSugerido) => $pontoSugerido->uuid = (string) Uuid::uuid4());
-    }
 
     public function imagens()
     {
