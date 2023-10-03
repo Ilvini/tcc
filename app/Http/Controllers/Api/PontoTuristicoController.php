@@ -125,7 +125,7 @@ class PontoTuristicoController extends Controller
     {
         try {
 
-            $subcategorias = Subcategoria::get()->pluck('nome', 'id')->toArray();
+            $subcategorias = Subcategoria::where('ativo', 1)->get()->pluck('nome', 'id')->toArray();
 
             return apiResponse(false, 'Sem erros!', $subcategorias);
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Controle\AvaliacaoController;
+use App\Http\Controllers\Controle\CategoriaController;
 use App\Http\Controllers\Controle\DashboardController;
 use App\Http\Controllers\Controle\InformacaoController;
 use App\Http\Controllers\Controle\PontoSugeridoController;
@@ -34,6 +35,15 @@ Route::group([
     })->name('dashboard');
 
     Route::post('ordenacao', [DashboardController::class, 'ordenacao'])->name('ordenacao');
+
+    /*--------------------------------------------------------------------------
+    | Rotas de Categorias
+    |--------------------------------------------------------------------------*/
+    Route::controller(CategoriaController::class)->prefix('categorias')->name('categorias.')->group(function () {
+        Route::get('/', 'index')->middleware('permission:Visualizar Categorias')->name('index');
+        Route::post('/adicionar', 'store')->middleware('permission:Adicionar Categorias')->name('adicionar');
+        Route::get('/excluir/{id}', 'remover')->middleware('permission:Excluir Categorias')->name('delete');
+    });
 
     /*--------------------------------------------------------------------------
     | Rotas de Pontos Turisticos

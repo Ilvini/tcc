@@ -75,6 +75,15 @@ $sidebarClass = !empty($sidebarTransparent) ? 'sidebar-transparent' : '';
 				</a>
 			</li>
 
+            @can('Visualizar Categorias')
+                <li class="has-sub {{ activeMenu('controle.categorias') }}">
+                    <a href="{{ route('controle.categorias.index') }}">
+                        <i class="far fa-list-alt"></i>
+                        <span>Categorias</span>
+                    </a>
+                </li>
+            @endcan
+
             @can('Visualizar Pontos Turísticos')
                 <li class="has-sub {{ activeMenu('controle.pontos-turisticos') }}">
                     <a href="{{ route('controle.pontos-turisticos.index') }}">
