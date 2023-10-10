@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\IndexPlaceRequest;
 use App\Http\Requests\Api\NovoPontoSugeridoRequest;
+use App\Http\Resources\Api\CategoriaResource;
 use App\Http\Resources\Api\ListarPontoTuristicoResource;
 use App\Http\Resources\Api\PontoTuristicoResource;
 use App\Models\PontoSugerido;
@@ -125,9 +126,9 @@ class PontoTuristicoController extends Controller
     {
         try {
 
-            $subcategorias = Subcategoria::where('ativo', 1)->get()->pluck('nome', 'id')->toArray();
+            $subcategorias = Subcategoria::where('ativo', 1)->get();
 
-            return apiResponse(false, 'Sem erros!', $subcategorias);
+            return apiResponse(false, 'Sem erros!', CategoriaResource::collection($subcategorias));
 
         } catch (\Throwable $th) {
             Log::error($th);

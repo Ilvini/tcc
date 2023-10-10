@@ -30,9 +30,14 @@ Route::get('/pontos-turisticos/{uuid}', [PontoTuristicoController::class, 'detal
 
 Route::get('/pontos-turisticos-categorias', [PontoTuristicoController::class, 'categorias']);
 
+Route::get('/pontos-turisticos/{uuid}/avaliacoes', [AvaliacaoController::class, 'index']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cliente/me', [ClienteController::class, 'me']);
     Route::put('/cliente/alterar', [ClienteController::class, 'update']);
+    
+    Route::get('/cliente/categorias', [ClienteController::class, 'categorias']);
+    Route::post('/cliente/categorias/{id}', [ClienteController::class, 'mudarCategoria']);
 
     Route::post('/auth/nova-senha', [AuthController::class, 'alterarSenha']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
@@ -40,7 +45,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/pontos-turisticos', [PontoTuristicoController::class, 'create']);
 
-    Route::get('/pontos-turisticos/{uuid}/avaliacoes', [AvaliacaoController::class, 'index']);
     Route::post('/pontos-turisticos/{uuid}/avaliacoes/novo', [AvaliacaoController::class, 'create']);
 
     Route::get('/tipos-informacoes-adicionais', [InformacaoController::class, 'tipos']);
