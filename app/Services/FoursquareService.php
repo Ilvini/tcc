@@ -36,7 +36,7 @@ class FoursquareService
     public function placeSearch($lat, $lon, $radius = 1000, $categorias = '10000,13000,14000,16000,18000,19000')
     {
 
-        $fields = 'fsq_id,name,geocodes,categories';
+        $fields = 'fsq_id,name,geocodes,categories,photos';
 
         $ll = "{$lat},{$lon}";
 
@@ -47,7 +47,7 @@ class FoursquareService
 
     public function getPlaceDetails($fsq_id)
     {
-        $fields = 'fsq_id,name,geocodes,location,photos,rating';
+        $fields = 'fsq_id,name,geocodes,location,photos,rating,hours,hours_popular,price';
 
         $uri = "https://api.foursquare.com/v3/places/{$fsq_id}?fields={$fields}";
         

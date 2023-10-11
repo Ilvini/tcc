@@ -19,6 +19,10 @@ class PontoTuristico extends Model
         'lon',
     ];
 
+    protected $appends = [
+        'aberto',
+    ];
+
     protected static function booted()
     {
         static::creating(fn (PontoTuristico $pontoTuristico) => $pontoTuristico->uuid = (string) Uuid::uuid4());
@@ -47,5 +51,38 @@ class PontoTuristico extends Model
     public function informacoes()
     {
         return $this->hasMany(PontoTuristicoInformacao::class);
+    }
+
+    public function getAbertoAttribute()
+    {
+        $diaSemanaAgora = date('w');
+
+        if ($diaSemanaAgora == 0) {
+            $diaSemanaAgora = 7;
+        } else {
+            $diaSemanaAgora++;
+        }
+
+        $horario = $this->horarios->where('dia_semana', $diaSemanaAgora)->first();
+
+        if ($horario) {
+            if ($horario->dia_todo) {
+                return true;
+            } else {
+                $abertura = explode(':', $horario->abertura);
+                $fechamento = explode(':', $horario->fechamento);
+
+                $auxAbertura = $abertura[0] . $abertura[1];
+                $auxFechamento = $fechamento[0] . $fechamento[1];
+
+                $horaAtual = date('Hi');
+
+                if ($horaAtual >= $auxAbertura && $horaAtual <= $auxFechamento) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

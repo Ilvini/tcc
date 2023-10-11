@@ -16,9 +16,17 @@ class ListarPontoTuristicoResource extends JsonResource
     {
         $categoria = explode(' > ', $this->subcategoria->nome);
 
+        $imagem = null;
+        if (is_object($this->imagens) && $this->imagens->first() !== null) {
+            $imagem = route('imagem.render', 'locais/p/'. $this->imagens->first()->imagem);
+        } else {
+            $imagem = $this->imagens;
+        }
+
         return [
             'uuid' => $this->uuid,
             'nome' => $this->nome,
+            'imagem' => $imagem,
             'lat' => (float) $this->lat,
             'lon' => (float) $this->lon,
             'categoria' => last($categoria),

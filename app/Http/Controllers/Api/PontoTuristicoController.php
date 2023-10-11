@@ -47,6 +47,7 @@ class PontoTuristicoController extends Controller
                     return new Fluent([
                         'uuid' => $item->fsq_id,
                         'nome' => $item->name,
+                        'imagens' => isset($item->photos[0]) ? $item->photos[0]->prefix . '200' . $item->photos[0]->suffix : null,
                         'lat' => $item->geocodes->main->latitude,
                         'lon' => $item->geocodes->main->longitude,
                         'subcategoria' => new Fluent(['nome' => $item->categories[0]->name]),
