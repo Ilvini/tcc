@@ -29,6 +29,8 @@ Route::get('/pontos-turisticos', [PontoTuristicoController::class, 'index']);
 Route::get('/pontos-turisticos/{uuid}', [PontoTuristicoController::class, 'detalhe']);
 
 Route::get('/pontos-turisticos-categorias', [PontoTuristicoController::class, 'categorias']);
+Route::get('/tipos-informacoes-adicionais', [InformacaoController::class, 'tipos']);
+Route::get('/pontos-turisticos/{uuid}/informacoes-adicionais', [InformacaoController::class, 'index']);
 
 Route::get('/pontos-turisticos/{uuid}/avaliacoes', [AvaliacaoController::class, 'index']);
 
@@ -47,8 +49,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/pontos-turisticos/{uuid}/avaliacoes/novo', [AvaliacaoController::class, 'create']);
 
-    Route::get('/tipos-informacoes-adicionais', [InformacaoController::class, 'tipos']);
-    Route::get('/pontos-turisticos/{uuid}/informacoes-adicionais', [InformacaoController::class, 'index']);
     Route::post('/pontos-turisticos/{uuid}/informacoes-adicionais/novo', [InformacaoController::class, 'create']);
 });
 
