@@ -33,10 +33,10 @@ class FoursquareService
         ]);
     }
 
-    public function placeSearch($lat, $lon, $radius = 1000, $categorias = '10000,13000,14000,16000,18000,19000')
+    public function placeSearch($lat, $lon, $radius = 1000, $categorias)
     {
 
-        $fields = 'fsq_id,name,geocodes,categories,photos';
+        $fields = 'fsq_id,name,geocodes,categories,photos,popularity';
 
         $ll = "{$lat},{$lon}";
 

@@ -29,7 +29,6 @@ class IndexPlaceRequest extends FormRequest
             'lat' => 'required',
             'lon' => 'required',
             'raio' => 'required',
-            'categorias' => 'required',
         ];
     }
 
@@ -44,7 +43,6 @@ class IndexPlaceRequest extends FormRequest
             'lat.required' => 'O campo latitude é obrigatório',
             'lon.required' => 'O campo longitude é obrigatório',
             'raio.required' => 'O campo raio é obrigatório',
-            'categorias.required' => 'O campo categorias é obrigatório',
         ];
     }
 

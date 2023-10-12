@@ -20,7 +20,7 @@ class PontoTuristico extends Model
     ];
 
     protected $appends = [
-        'aberto',
+        'aberto', 'popularidade'
     ];
 
     protected static function booted()
@@ -96,5 +96,16 @@ class PontoTuristico extends Model
             'lat' => $pontoTuristico->geocodes->main->latitude,
             'lon' => $pontoTuristico->geocodes->main->longitude,
         ]);
+    }
+
+    public function getPopularidadeAttribute()
+    {
+        $popularidade = 0;
+
+        if ($this->avaliacoes->count() > 0) {
+            $popularidade = $this->avaliacoes->avg('estrelas') / 5;
+        }
+
+        return $popularidade;
     }
 }

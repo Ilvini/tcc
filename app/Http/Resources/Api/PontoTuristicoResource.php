@@ -15,8 +15,36 @@ class PontoTuristicoResource extends JsonResource
     public function toArray($request)
     {
         $imagens = [];
+        $horarios = [];
 
         if (isset($this->uuid)) {
+
+            if (isset($this->foursquare)) {
+                foreach ($this->foursquare->photos as $photo) {
+                    $imagens[] = $photo->prefix . '400' . $photo->suffix;
+                }
+
+                if (isset($this->foursquare->hours->regular)) {
+                    foreach ($this->foursquare->hours->regular as $hour) {
+        
+                        if ($hour->day == 7) {
+                            $dia = 1;
+                        } else {
+                            $dia = $hour->day + 1;
+                        }
+        
+                        $horario = substr($hour->open, 0, 2) . ':' 
+                            . substr($hour->open, 2, 2) . ' ás ' 
+                            . substr($hour->close, 0, 2) . ':' 
+                            . substr($hour->close, 2, 2);
+        
+                        $horarios[] = [
+                            'nome' => diaSemana($dia),
+                            'horario' => $horario,
+                        ];
+                    }
+                }
+            }
 
             foreach ($this->imagens as $imagem) {
                 $imagens[] = route('imagem.render', 'locais/m/' . $imagem->imagem);
@@ -32,13 +60,13 @@ class PontoTuristicoResource extends JsonResource
                 'avaliacao_media' => $this->avaliacoes->avg('estrelas'),
                 'avaliacoes' => AvaliacaoResource::collection($this->avaliacoes),
                 'informacoes_adicionais' => InformacaoResource::collection($this->informacoes)->collection->groupBy('tipo'),
-                'horario_funcionamento' => HorarioResource::collection($this->horarios),
+                'horario_funcionamento' => count($this->horarios) > 0 ? HorarioResource::collection($this->horarios) : $horarios,
                 'aberto' => $this->aberto,
             ];
         } else {
 
-            foreach ($this->photos as $imagem) {
-                $imagens[] = $imagem->prefix . '200' . $imagem->suffix;
+            foreach ($this->photos as $photo) {
+                $imagens[] = $photo->prefix . '400' . $photo->suffix;
             }
 
             $horarios = [];

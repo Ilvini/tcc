@@ -18,7 +18,9 @@ class ListarPontoTuristicoResource extends JsonResource
 
         $imagem = null;
         if (is_object($this->imagens) && $this->imagens->first() !== null) {
-            $imagem = route('imagem.render', 'locais/p/'. $this->imagens->first()->imagem);
+            $imagem = route('imagem.render', 'locais/g/'. $this->imagens->first()->imagem);
+        } else if (isset($this->foursquare)) {
+            $imagem = isset($this->foursquare->photos[0]) ? $this->foursquare->photos[0]->prefix . '400' . $this->foursquare->photos[0]->suffix : null;
         } else {
             $imagem = $this->imagens;
         }

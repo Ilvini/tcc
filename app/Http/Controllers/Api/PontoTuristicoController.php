@@ -26,7 +26,8 @@ class PontoTuristicoController extends Controller
             $lat = $request->lat;
             $lon = $request->lon;
             $raio = $request->raio;
-            $categorias = $request->categorias;
+
+            $categorias = Subcategoria::where('ativo', 1)->pluck('fsq_id')->toArray();
 
             $pontosTuristicos = PontoTuristico::select('*')
                 ->selectRaw(
@@ -34,8 +35,23 @@ class PontoTuristicoController extends Controller
                     [$lat, $lon, $lat]
                 )
                 ->having('distancia', '<=', $raio)
+                ->whereIn('subcategoria_id', $categorias)
                 ->orderBy('distancia')
                 ->get();
+
+            $pontosTuristicos->load([
+                'imagens',
+                'subcategoria',
+            ]);
+
+            $dbFoursquarePontos = [];
+            foreach ($pontosTuristicos as $pontosTuristico) {
+                if ($pontosTuristico->fsq_id != null) {
+                    $dbFoursquarePontos[$pontosTuristico->fsq_id] = $pontosTuristico;
+                }
+            }
+
+            $categorias = implode(',', $categorias);
 
             $results = $foursquareService->placeSearch($lat, $lon, $raio * 1000, $categorias);
 
@@ -43,20 +59,32 @@ class PontoTuristicoController extends Controller
                 $results = json_decode($results->body);
 
                 // Merge dos pontos turísticos com os pontos do foursquare
-                $pontosFoursquare = collect($results->results)->map(function ($item) {
-                    return new Fluent([
-                        'uuid' => $item->fsq_id,
-                        'nome' => $item->name,
-                        'imagens' => isset($item->photos[0]) ? $item->photos[0]->prefix . '200' . $item->photos[0]->suffix : null,
-                        'lat' => $item->geocodes->main->latitude,
-                        'lon' => $item->geocodes->main->longitude,
-                        'subcategoria' => new Fluent(['nome' => $item->categories[0]->name]),
-                        'icone' => $item->categories[0]->icon->prefix . '64' . $item->categories[0]->icon->suffix,
-                    ]);
-                });
+                $pontosFoursquare = [];
+                foreach ($results->results as $ponto) {
+
+                    if (isset($dbFoursquarePontos[$ponto->fsq_id])) {
+
+                        $dbFoursquarePontos[$ponto->fsq_id]->foursquare = $ponto;
+
+                    } else {
+
+                        $pontosFoursquare[] = new Fluent([
+                            'uuid' => $ponto->fsq_id,
+                            'nome' => $ponto->name,
+                            'imagens' => isset($ponto->photos[0]) ? $ponto->photos[0]->prefix . '200' . $ponto->photos[0]->suffix : null,
+                            'lat' => $ponto->geocodes->main->latitude,
+                            'lon' => $ponto->geocodes->main->longitude,
+                            'subcategoria' => new Fluent(['nome' => $ponto->categories[0]->name]),
+                            'icone' => $ponto->categories[0]->icon->prefix . '64' . $ponto->categories[0]->icon->suffix,
+                            'popularidade' => $ponto->popularity ?? 0,
+                        ]);
+                    }
+                }
             }
 
-            return apiResponse(false, 'Sem erros!', ListarPontoTuristicoResource::collection($pontosFoursquare->merge($pontosTuristicos)));
+            $pontosTuristicos = collect($pontosFoursquare)->merge($pontosTuristicos);
+
+            return apiResponse(false, 'Sem erros!', ListarPontoTuristicoResource::collection($pontosTuristicos->sortBy('popularidade')));
 
         } catch (\Throwable $th) {
             Log::error($th);
@@ -68,13 +96,28 @@ class PontoTuristicoController extends Controller
     {
         try {
 
-            // Verificar se é uuid
-            if (preg_match('/^[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}$/i', $uuid)) {
+            $pontoTuristico = PontoTuristico::where('uuid', $uuid)->orWhere('fsq_id', $uuid)->first();
 
-                $pontoTuristico = PontoTuristico::where('uuid', $uuid)->first();
-    
-                if (!$pontoTuristico) {
-                    return apiResponse(true, 'Ponto turístico não encontrado', null, 404);
+            if ($pontoTuristico) {
+                
+                $pontoTuristico->load([
+                    'imagens',
+                    'avaliacoes',
+                    'informacoes',
+                    'horarios',
+                ]);
+
+                if ($pontoTuristico->fsq_id != null) {
+
+                    $foursquareService = new FoursquareService();
+
+                    $results = $foursquareService->getPlaceDetails($pontoTuristico->fsq_id);
+
+                    if ($results->status == 200) {
+                        $pontoTuristico->foursquare = json_decode($results->body);
+                    } else {
+                        $pontoTuristico->update(['fsq_id' => null]);
+                    }
                 }
 
             } else {
@@ -85,12 +128,8 @@ class PontoTuristicoController extends Controller
 
                 if ($results->status == 200) {
                     $pontoTuristico = json_decode($results->body);
-
-                    $dbPontoTuristico = PontoTuristico::where('fsq_id', $uuid)->first();
-
-                    if ($dbPontoTuristico) {
-                        $pontoTuristico = $dbPontoTuristico;
-                    }
+                } else {
+                    return apiResponse(true, 'Local não encontrado', null, 404);
                 }
             }
 

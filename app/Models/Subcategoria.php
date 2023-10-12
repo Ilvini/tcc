@@ -21,6 +21,7 @@ class Subcategoria extends Model
         'slug',
         'ordem',
         'fsq_id',
+        'ativo',
     ];
 
     public function getSlugOptions() : SlugOptions
