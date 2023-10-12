@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\NovaInformacaoRequest;
 use App\Http\Resources\Api\InformacaoResource;
 use App\Models\PontoTuristico;
-use Illuminate\Http\Request;
+use App\Services\FoursquareService;
 use Illuminate\Support\Facades\Log;
 
 class InformacaoController extends Controller
@@ -19,10 +20,19 @@ class InformacaoController extends Controller
     {
         try {
 
-            $pontoTuristico = PontoTuristico::where('uuid', $uuid)->first();
+            $pontoTuristico = PontoTuristico::where('uuid', $uuid)->orWhere('fsq_id', $uuid)->first();
 
             if (!$pontoTuristico) {
-                return apiResponse(true, 'Ponto turístico não encontrado', null, 404);
+                
+                $foursquareService = new FoursquareService();
+
+                $results = $foursquareService->getPlaceDetails($uuid);
+
+                if ($results->status == 200) {
+                    return apiResponse(false, 'Sem erros!');
+                } else {
+                    return apiResponse(true, 'Ponto turístico não encontrado', null, 404);
+                }
             }
 
             $informacoes = $pontoTuristico->informacoes()->where('aprovado', true)->get();
@@ -35,17 +45,30 @@ class InformacaoController extends Controller
         }
     }
 
-    public function create($uuid, Request $request)
+    public function create($uuid, NovaInformacaoRequest $request)
     {
         try {
 
-            $pontoTuristico = PontoTuristico::where('uuid', $uuid)->first();
+            $dbPontoTuristico = PontoTuristico::where('uuid', $uuid)->orWhere('fsq_id', $uuid)->first();
 
-            if (!$pontoTuristico) {
-                return apiResponse(true, 'Ponto turístico não encontrado', null, 404);
+            if (!$dbPontoTuristico) {
+                
+                $foursquareService = new FoursquareService();
+
+                $results = $foursquareService->getPlaceDetails($uuid);
+
+                if ($results->status == 200) {
+
+                    $pontoTuristico = json_decode($results->body);
+
+                    $dbPontoTuristico = PontoTuristico::cadastrarPontosFoursquare($pontoTuristico);
+
+                } else {
+                    return apiResponse(true, 'Ponto turístico não encontrado', null, 404);
+                }
             }
 
-            $pontoTuristico->informacoes()->create([
+            $dbPontoTuristico->informacoes()->create([
                 'cliente_id' => auth()->id(),
                 'tipo' => $request->tipo,
                 'titulo' => $request->titulo,

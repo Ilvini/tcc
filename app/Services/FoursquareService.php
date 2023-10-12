@@ -47,7 +47,7 @@ class FoursquareService
 
     public function getPlaceDetails($fsq_id)
     {
-        $fields = 'fsq_id,name,geocodes,location,photos,rating,hours,hours_popular,price';
+        $fields = 'fsq_id,name,geocodes,categories,location,photos,rating,hours,hours_popular,price';
 
         $uri = "https://api.foursquare.com/v3/places/{$fsq_id}?fields={$fields}";
         

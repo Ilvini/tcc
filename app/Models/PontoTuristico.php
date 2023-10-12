@@ -85,4 +85,16 @@ class PontoTuristico extends Model
 
         return false;
     }
+
+    public static function cadastrarPontosFoursquare($pontoTuristico)
+    {
+        return PontoTuristico::create([
+            'subcategoria_id' => $pontoTuristico->categories[0]->id,
+            'fsq_id' => $pontoTuristico->fsq_id,
+            'nome' => $pontoTuristico->name,
+            'endereco' => $pontoTuristico->location->formatted_address,
+            'lat' => $pontoTuristico->geocodes->main->latitude,
+            'lon' => $pontoTuristico->geocodes->main->longitude,
+        ]);
+    }
 }
