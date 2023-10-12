@@ -42,7 +42,7 @@ Route::group([
     Route::controller(CategoriaController::class)->prefix('categorias')->name('categorias.')->group(function () {
         Route::get('/', 'index')->middleware('permission:Visualizar Categorias')->name('index');
         Route::post('/adicionar', 'store')->middleware('permission:Adicionar Categorias')->name('adicionar');
-        Route::get('/excluir/{id}', 'remover')->middleware('permission:Excluir Categorias')->name('delete');
+        Route::get('/excluir/{id}', 'delete')->middleware('permission:Excluir Categorias')->name('delete');
     });
 
     /*--------------------------------------------------------------------------
