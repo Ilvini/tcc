@@ -99,7 +99,7 @@ class PontoTuristicoResource extends JsonResource
                 'lon' => $this->geocodes->main->longitude,
                 'endereco' => $this->location->formatted_address,
                 'imagens' => $imagens,
-                'avaliacao_media' => $this->rating / 2 ?? 0,
+                'avaliacao_media' => isset($this->rating) ? $this->rating / 2 : 0,
                 'avaliacoes' => [],
                 'informacoes_adicionais' => [],
                 'horario_funcionamento' => $horarios,
