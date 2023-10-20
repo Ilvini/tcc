@@ -20,10 +20,11 @@ class PontoTuristicoResource extends JsonResource
         $horarios = [];
 
         if (request()->bearerToken() != null) {
-            [$id, $token] = explode('|', request()->bearerToken(), 2);
-            $token_data = PersonalAccessToken::where('token', hash('sha256', $token))->first();
-
-            $favorito = Favorito::where('cliente_id', $token_data->tokenable_id)->where('ponto_turistico_id', $this->fsq_id)->first();
+            $token = explode('|', request()->bearerToken());
+            if (isset($token[1])) {
+                $token_data = PersonalAccessToken::where('token', hash('sha256', $token[1]))->first();
+                $favorito = Favorito::where('cliente_id', $token_data->tokenable_id)->where('ponto_turistico_id', $this->fsq_id)->first();
+            }
         }
 
         if (isset($this->uuid)) {
