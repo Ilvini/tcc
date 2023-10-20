@@ -182,7 +182,7 @@ class PontoTuristicoController extends Controller
 
             auth()->user()->favoritos()->toggle($uuid);
 
-            return apiResponse(false, 'Local favoritado com sucesso!');
+            return apiResponse(false, 'Sem erros!');
             
         } catch (\Throwable $th) {
             Log::error($th);

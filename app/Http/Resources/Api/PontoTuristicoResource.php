@@ -2,7 +2,9 @@
 
 namespace App\Http\Resources\Api;
 
+use App\Models\Favorito;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class PontoTuristicoResource extends JsonResource
 {
@@ -16,6 +18,13 @@ class PontoTuristicoResource extends JsonResource
     {
         $imagens = [];
         $horarios = [];
+
+        if (request()->bearerToken() != null) {
+            [$id, $token] = explode('|', request()->bearerToken(), 2);
+            $token_data = PersonalAccessToken::where('token', hash('sha256', $token))->first();
+
+            $favorito = Favorito::where('cliente_id', $token_data->tokenable_id)->where('ponto_turistico_id', $this->fsq_id)->first();
+        }
 
         if (isset($this->uuid)) {
 
@@ -62,6 +71,8 @@ class PontoTuristicoResource extends JsonResource
                 'informacoes_adicionais' => InformacaoResource::collection($this->informacoes)->collection->groupBy('tipo'),
                 'horario_funcionamento' => count($this->horarios) > 0 ? HorarioResource::collection($this->horarios) : $horarios,
                 'aberto' => $this->aberto,
+                'favorito' => isset($favorito) ? true : false,
+                'avaliado' => isset($token_data->tokenable_id) ? $this->avaliacoes->where('cliente_id', $token_data->tokenable_id)->count() > 0 : false,
             ];
         } else {
 
@@ -104,6 +115,8 @@ class PontoTuristicoResource extends JsonResource
                 'informacoes_adicionais' => [],
                 'horario_funcionamento' => $horarios,
                 'aberto' => $this->hours->open_now,
+                'favorito' => isset($favorito) ? true : false,
+                'avaliado' => false,
             ];
         }
     }
