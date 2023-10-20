@@ -52,6 +52,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/pontos-turisticos/{uuid}/informacoes-adicionais/novo', [InformacaoController::class, 'create']);
 
+    Route::patch('/pontos-turisticos/{uuid}/favoritar', [PontoTuristicoController::class, 'favoritar']);
+
     Route::get('/guias', [GuiaController::class, 'index']);
 });
 

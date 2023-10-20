@@ -69,4 +69,9 @@ class Cliente extends Authenticatable
     {
         return $this->belongsToMany(Subcategoria::class);
     }
+
+    public function favoritos()
+    {
+        return $this->belongsToMany(PontoTuristico::class, 'favoritos');
+    }
 }

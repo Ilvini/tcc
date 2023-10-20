@@ -175,4 +175,18 @@ class PontoTuristicoController extends Controller
             return apiResponse(true, 'Erro interno', null, 500);
         }
     }
+
+    public function favoritar($uuid)
+    {
+        try {
+
+            auth()->user()->favoritos()->toggle($uuid);
+
+            return apiResponse(false, 'Local favoritado com sucesso!');
+            
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return apiResponse(true, 'Erro interno', null, 500);
+        }
+    }
 }
