@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\AvaliacaoController;
 use App\Http\Controllers\Api\ClienteController;
+use App\Http\Controllers\Api\GuiaController;
 use App\Http\Controllers\Api\InformacaoController;
 use App\Http\Controllers\Api\PontoTuristicoController;
 use App\Http\Controllers\Api\WikipediaController;
@@ -50,6 +51,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/pontos-turisticos/{uuid}/avaliacoes/novo', [AvaliacaoController::class, 'create']);
 
     Route::post('/pontos-turisticos/{uuid}/informacoes-adicionais/novo', [InformacaoController::class, 'create']);
+
+    Route::get('/guias', [GuiaController::class, 'index']);
 });
 
 Route::post('/recuperar-senha', [AuthController::class, 'recuperarSenha']);

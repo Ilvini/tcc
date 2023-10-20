@@ -32,10 +32,10 @@ class GuiasImport implements ToModel
             'email' => $row[5],
             'site' => $row[6],
             'validade' => $validade ?? null,
-            'cidades_atuacao' => json_encode(explode('|', str_replace(' ', '', $row[8]))),
-            'categorias' => json_encode(explode('|', str_replace(' ', '', $row[9]))),
-            'segmentos' => json_encode(explode('|', str_replace(' ', '', $row[10]))),
-            'idiomas' => json_encode(explode('|', str_replace(' ', '', $row[11]))),
+            'cidades_atuacao' => json_encode(explode('|', str_replace(' ', '', $row[8])), JSON_UNESCAPED_UNICODE),
+            'categorias' => json_encode(explode('|', str_replace(' ', '', $row[9])), JSON_UNESCAPED_UNICODE),
+            'segmentos' => json_encode(explode('|', str_replace(' ', '', $row[10])), JSON_UNESCAPED_UNICODE),
+            'idiomas' => json_encode(explode('|', str_replace(' ', '', $row[11])), JSON_UNESCAPED_UNICODE),
             'motorista' => $row[12],
         ]);
     }
