@@ -75,6 +75,51 @@ $sidebarClass = !empty($sidebarTransparent) ? 'sidebar-transparent' : '';
 				</a>
 			</li>
 
+            @can('Visualizar Categorias')
+                <li class="has-sub {{ activeMenu('controle.categorias') }}">
+                    <a href="{{ route('controle.categorias.index') }}">
+                        <i class="far fa-list-alt"></i>
+                        <span>Categorias</span>
+                    </a>
+                </li>
+            @endcan
+
+            @can('Visualizar Pontos Turísticos')
+                <li class="has-sub {{ activeMenu('controle.pontos-turisticos') }}">
+                    <a href="{{ route('controle.pontos-turisticos.index') }}">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <span>Pontos Turísticos</span>
+                    </a>
+                </li>
+            @endcan
+            
+            @can('Visualizar Pontos Sugeridos')
+                <li class="has-sub {{ activeMenu('controle.pontos-sugeridos') }}">
+                    <a href="{{ route('controle.pontos-sugeridos.index') }}">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Pontos Sugeridos</span>
+                    </a>
+                </li>
+            @endcan
+            
+            @can('Visualizar Avaliações')
+                <li class="has-sub {{ activeMenu('controle.avaliacoes') }}">
+                    <a href="{{ route('controle.avaliacoes.index') }}">
+                        <i class="fas fa-star"></i>
+                        <span>Avaliações</span>
+                    </a>
+                </li>
+            @endcan
+
+            @can('Visualizar Informações Adicionais')
+                <li class="has-sub {{ activeMenu('controle.informacoes') }}">
+                    <a href="{{ route('controle.informacoes.index') }}">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Informações Adicionais</span>
+                    </a>
+                </li>
+            @endcan
+
             @can('Visualizar usuário')
                 <li
                     class="has-sub {{ activeMenu(['controle.usuario', 'controle.roles']) }}">

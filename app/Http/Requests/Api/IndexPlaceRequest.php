@@ -26,8 +26,9 @@ class IndexPlaceRequest extends FormRequest
     public function rules()
     {
         return [
-            'll' => 'required',
-            'radius' => 'required',
+            'lat' => 'required',
+            'lon' => 'required',
+            'raio' => 'required',
         ];
     }
 
@@ -39,16 +40,14 @@ class IndexPlaceRequest extends FormRequest
     public function messages()
     {
         return [
-            'll.required' => 'É obrigatório informar a Latitude e a Longidute',
-            'radius.required' => 'O campo raio é obrigatório',
+            'lat.required' => 'O campo latitude é obrigatório',
+            'lon.required' => 'O campo longitude é obrigatório',
+            'raio.required' => 'O campo raio é obrigatório',
         ];
     }
 
     public function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException(apiResponse(true, $validator->errors()->first(), [
-            'titulo' => 'Campo inválido',
-            'descricao' => $validator->errors()->first(),
-        ], 422));
+        throw new HttpResponseException(apiResponse(true, $validator->errors()->first(), [], 422));
     }
 }

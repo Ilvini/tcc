@@ -3,7 +3,10 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\AvaliacaoController;
 use App\Http\Controllers\Api\ClienteController;
-use App\Http\Controllers\Api\HomeController;
+use App\Http\Controllers\Api\GuiaController;
+use App\Http\Controllers\Api\InformacaoController;
+use App\Http\Controllers\Api\PontoTuristicoController;
+use App\Http\Controllers\Api\WikipediaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,22 +20,41 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/wikipedia/buscar', [WikipediaController::class, 'index'])->name('api.wikipedia.buscar');
+Route::get('/wikipedia/detalhe', [WikipediaController::class, 'detalhe'])->name('api.wikipedia.detalhe');
+
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/cliente/novo', [ClienteController::class, 'register']);
 
-Route::get('/pontos-turisticos', [HomeController::class, 'index']);
-Route::get('/pontos-turisticos/{fsq_id}', [HomeController::class, 'detalhe']);
+Route::get('/pontos-turisticos', [PontoTuristicoController::class, 'index']);
+Route::get('/pontos-turisticos/{uuid}', [PontoTuristicoController::class, 'detalhe']);
+
+Route::get('/pontos-turisticos-categorias', [PontoTuristicoController::class, 'categorias']);
+Route::get('/tipos-informacoes-adicionais', [InformacaoController::class, 'tipos']);
+Route::get('/pontos-turisticos/{uuid}/informacoes-adicionais', [InformacaoController::class, 'index']);
+
+Route::get('/pontos-turisticos/{uuid}/avaliacoes', [AvaliacaoController::class, 'index']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cliente/me', [ClienteController::class, 'me']);
     Route::put('/cliente/alterar', [ClienteController::class, 'update']);
+    
+    Route::get('/cliente/categorias', [ClienteController::class, 'categorias']);
+    Route::post('/cliente/categorias/{id}', [ClienteController::class, 'mudarCategoria']);
 
     Route::post('/auth/nova-senha', [AuthController::class, 'alterarSenha']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::post('/auth/check-token', [AuthController::class, 'checarToken']);
 
-    Route::get('/pontos-turisticos/{fsq_id}/avaliacoes', [AvaliacaoController::class, 'index']);
-    Route::post('/pontos-turisticos/{fsq_id}/avaliacoes/novo', [AvaliacaoController::class, 'create']);
+    Route::post('/pontos-turisticos', [PontoTuristicoController::class, 'create']);
+
+    Route::post('/pontos-turisticos/{uuid}/avaliacoes/novo', [AvaliacaoController::class, 'create']);
+
+    Route::post('/pontos-turisticos/{uuid}/informacoes-adicionais/novo', [InformacaoController::class, 'create']);
+
+    Route::patch('/pontos-turisticos/{uuid}/favoritar', [PontoTuristicoController::class, 'favoritar']);
+
+    Route::get('/guias', [GuiaController::class, 'index']);
 });
 
 Route::post('/recuperar-senha', [AuthController::class, 'recuperarSenha']);

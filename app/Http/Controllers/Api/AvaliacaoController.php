@@ -3,18 +3,34 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\NovaAvaliacaoRequest;
 use App\Http\Resources\Api\AvaliacaoResource;
-use App\Models\Avaliacao;
-use Illuminate\Http\Request;
+use App\Models\PontoTuristico;
+use App\Services\FoursquareService;
 use Illuminate\Support\Facades\Log;
 
 class AvaliacaoController extends Controller
 {
-    public function index($fsq_id)
+    public function index($uuid)
     {
         try {
 
-            $avaliacoes = Avaliacao::where('fsq_id', $fsq_id)->get();
+            $pontoTuristico = PontoTuristico::where('uuid', $uuid)->orWhere('fsq_id', $uuid)->first();
+
+            if (!$pontoTuristico) {
+
+                $foursquareService = new FoursquareService();
+
+                $results = $foursquareService->getPlaceDetails($uuid);
+
+                if ($results->status == 200) {
+                    return apiResponse(false, 'Sem erros!');
+                } else {
+                    return apiResponse(true, 'Ponto turístico não encontrado', null, 404);
+                }
+            }
+
+            $avaliacoes = $pontoTuristico->avaliacoes()->where('aprovado', true)->get();
 
             return apiResponse(false, 'Sem erros!', AvaliacaoResource::collection($avaliacoes));
 
@@ -24,13 +40,31 @@ class AvaliacaoController extends Controller
         }
     }
 
-    public function create($fsq_id, Request $request)
+    public function create($uuid, NovaAvaliacaoRequest $request)
     {
         try {
 
-            Avaliacao::create([
+            $dbPontoTuristico = PontoTuristico::where('uuid', $uuid)->orWhere('fsq_id', $uuid)->first();
+
+            if (!$dbPontoTuristico) {
+                
+                $foursquareService = new FoursquareService();
+
+                $results = $foursquareService->getPlaceDetails($uuid);
+
+                if ($results->status == 200) {
+
+                    $pontoTuristico = json_decode($results->body);
+
+                    $dbPontoTuristico = PontoTuristico::cadastrarPontosFoursquare($pontoTuristico);
+
+                } else {
+                    return apiResponse(true, 'Ponto turístico não encontrado', null, 404);
+                }
+            }
+
+            $dbPontoTuristico->avaliacoes()->create([
                 'cliente_id' => auth()->id(),
-                'fsq_id' => $fsq_id,
                 'estrelas' => $request->estrelas,
                 'comentario' => $request->comentario,
             ]);

@@ -1,0 +1,35 @@
+name: "Deploy na Homologação"
+on:
+  push:
+    branches:
+      - homolog
+  workflow_dispatch:
+    inputs:
+      sync:
+          description: "File synchronization"
+          required: true
+          default: "delta"
+
+jobs:
+  deploy-homolog:
+    name: "Deploy para a homologação"
+    
+    if: ${{ github.ref == 'refs/heads/homolog' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Pega o código mais recente"
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: "SFTP Deploy"
+        uses: milanmk/actions-file-deployer@master
+        with:
+          remote-protocol: "sftp"
+          remote-host: "149.100.155.251"
+          remote-user: "u539902968"
+          remote-port: "65002"
+          remote-password: '${{ secrets.FTP_HOMOLOG_PASS }}'
+          remote-path: "/home/u539902968/domains/pwasolutions.tech/public_html/myplaces2go"
+          sync: "delta"

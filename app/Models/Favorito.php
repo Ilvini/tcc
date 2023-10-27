@@ -5,19 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Avaliacao extends Model
+class Favorito extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'cliente_id',
-        'fsq_id',
-        'estrelas',
-        'comentario',
+        'ponto_turistico_id',
     ];
-
-    public function cliente()
-    {
-        return $this->belongsTo(Cliente::class);
-    }
 }

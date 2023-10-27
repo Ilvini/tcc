@@ -64,4 +64,14 @@ class Cliente extends Authenticatable
             $cliente->celular = preg_replace('/[^0-9]/', '', $cliente->celular);
         });
     }
+
+    public function subcategorias()
+    {
+        return $this->belongsToMany(Subcategoria::class);
+    }
+
+    public function favoritos()
+    {
+        return $this->belongsToMany(PontoTuristico::class, 'favoritos');
+    }
 }

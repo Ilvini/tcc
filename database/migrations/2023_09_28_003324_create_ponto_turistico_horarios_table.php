@@ -13,13 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('avaliacaos', function (Blueprint $table) {
+        Schema::create('ponto_turistico_horarios', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('cliente_id')->constrained();
-            $table->string('fsq_id');
-            $table->integer('estrelas');
-            $table->text('comentario')->nullable();
+            $table->foreignId('ponto_turistico_id')->constrained();
+            $table->string('dia_semana');
+            $table->time('abertura')->nullable();
+            $table->time('fechamento')->nullable();
+            $table->boolean('dia_todo')->default(false);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -30,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('avaliacaos');
+        Schema::dropIfExists('ponto_turistico_horarios');
     }
 };
