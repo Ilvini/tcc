@@ -13,7 +13,7 @@ class FoursquareService
         $response = Http::withoutVerifying()
         ->withHeaders([
             'Authorization' => env('FOURSQUARE_API_KEY'),
-            'Accept-Language' => 'pt',
+            'Accept-Language' => request()->has('lang') ? request()->get('lang') : 'pt',
             'accept' => 'application/json'
         ])
         ->withOptions(["verify"=>false])
@@ -36,7 +36,7 @@ class FoursquareService
     public function placeSearch($lat, $lon, $radius = 1000, $categorias)
     {
 
-        $fields = 'fsq_id,name,geocodes,categories,photos,popularity';
+        $fields = 'fsq_id,name,geocodes,categories,location,photos,popularity';
 
         $ll = "{$lat},{$lon}";
 

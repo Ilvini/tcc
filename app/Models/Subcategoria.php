@@ -19,6 +19,7 @@ class Subcategoria extends Model
         'categoria_id',
         'nome',
         'slug',
+        'icone',
         'ordem',
         'fsq_id',
         'ativo',
