@@ -39,6 +39,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cliente/me', [ClienteController::class, 'me']);
     Route::put('/cliente/alterar', [ClienteController::class, 'update']);
     
+    Route::get('/cliente/favoritos', [ClienteController::class, 'favoritos']);
     Route::get('/cliente/categorias', [ClienteController::class, 'categorias']);
     Route::post('/cliente/categorias/{id}', [ClienteController::class, 'mudarCategoria']);
 

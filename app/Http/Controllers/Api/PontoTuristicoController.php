@@ -96,7 +96,27 @@ class PontoTuristicoController extends Controller
     {
         try {
 
-            auth()->user()->favoritos()->toggle($uuid);
+            $local = auth()->user()->favoritos()->where('ponto_turistico_id', $uuid)->first();
+
+            if ($local) {
+                $local->delete();
+            } else {
+
+                $classPontoTuristico = new ClassPontoTuristico();
+                $pontoTuristico = $classPontoTuristico->buscarPorId($uuid);
+                
+                if ($pontoTuristico) {
+                    auth()->user()->favoritos()->create([
+                        'ponto_turistico_id' => $uuid,
+                        'nome' => $pontoTuristico->nome,
+                        'endereco' => $pontoTuristico->endereco,
+                        'subcategoria_id' => $pontoTuristico->subcategoria_id,
+                        'imagem' => isset($pontoTuristico->imagem[0]) ? $pontoTuristico->imagem[0]->imagem : null,
+                    ]);
+                } else {
+                    return apiResponse(true, 'Local não encontrado', null, 404);
+                }
+            }
 
             return apiResponse(false, 'Sem erros!');
             

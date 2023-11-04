@@ -40,7 +40,7 @@ class FoursquareService
 
         $ll = "{$lat},{$lon}";
 
-        $uri = "https://api.foursquare.com/v3/places/search?fields={$fields}&categories={$categorias}&ll={$ll}&radius={$radius}&limit=50";
+        $uri = "https://api.foursquare.com/v3/places/search?fields={$fields}&categories={$categorias}&ll={$ll}&radius={$radius}&limit=40";
         
         return $this->request('get', $uri, []);
     }

@@ -72,6 +72,6 @@ class Cliente extends Authenticatable
 
     public function favoritos()
     {
-        return $this->belongsToMany(PontoTuristico::class, 'favoritos');
+        return $this->hasMany(Favorito::class);
     }
 }

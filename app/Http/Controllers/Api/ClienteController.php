@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\ClienteRegistroRequest;
 use App\Http\Requests\Api\ClienteUpdateRequest;
 use App\Http\Resources\Api\ClienteMeResource;
+use App\Http\Resources\Api\FavoritoResource;
 use App\Http\Resources\Api\PreferenciaResource;
 use App\Models\Cliente;
 use App\Models\Subcategoria;
@@ -91,6 +92,20 @@ class ClienteController extends Controller
                 : $cliente->subcategorias()->attach($id);
 
             return apiResponse(false, 'Sem erros');
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return apiResponse(true, 'Erro interno', null, 500);
+        }
+    }
+
+    public function favoritos()
+    {
+        try {
+            $cliente = auth()->user();
+    
+            $favoritos = $cliente->favoritos;
+
+            return apiResponse(false, 'Sem erros', FavoritoResource::collection($favoritos));
         } catch (\Throwable $th) {
             Log::error($th);
             return apiResponse(true, 'Erro interno', null, 500);
