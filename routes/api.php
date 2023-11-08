@@ -38,11 +38,13 @@ Route::get('/pontos-turisticos/{uuid}/avaliacoes', [AvaliacaoController::class, 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cliente/me', [ClienteController::class, 'me']);
     Route::put('/cliente/alterar', [ClienteController::class, 'update']);
+    Route::put('/cliente/alterar-senha', [ClienteController::class, 'alterarSenha']);
+    Route::delete('/cliente', [ClienteController::class, 'delete']);
     
+    Route::get('/cliente/favoritos', [ClienteController::class, 'favoritos']);
     Route::get('/cliente/categorias', [ClienteController::class, 'categorias']);
     Route::post('/cliente/categorias/{id}', [ClienteController::class, 'mudarCategoria']);
 
-    Route::post('/auth/nova-senha', [AuthController::class, 'alterarSenha']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::post('/auth/check-token', [AuthController::class, 'checarToken']);
 

@@ -26,7 +26,7 @@ class ClienteNovaSenhaRequest extends FormRequest
     public function rules()
     {
         return [
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|min:8|confirmed',
         ];
     }
 
@@ -39,7 +39,6 @@ class ClienteNovaSenhaRequest extends FormRequest
     {
         return [
             'password.required' => 'O campo senha é obrigatório',
-            'password.string' => 'O campo senha deve ser uma string',
             'password.min' => 'O campo senha deve ter no mínimo 8 caracteres',
             'password.confirmed' => 'O campo senha deve ser igual ao campo confirmar senha',
         ];

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Classes\PontoTuristico as ClassPontoTuristico;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\IndexPlaceRequest;
 use App\Http\Requests\Api\NovoPontoSugeridoRequest;
@@ -9,11 +10,8 @@ use App\Http\Resources\Api\CategoriaResource;
 use App\Http\Resources\Api\ListarPontoTuristicoResource;
 use App\Http\Resources\Api\PontoTuristicoResource;
 use App\Models\PontoSugerido;
-use App\Models\PontoTuristico;
 use App\Models\Subcategoria;
-use App\Services\FoursquareService;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Fluent;
 
 class PontoTuristicoController extends Controller
 {
@@ -21,68 +19,15 @@ class PontoTuristicoController extends Controller
     {
         try {
 
-            $foursquareService = new FoursquareService();
-
             $lat = $request->lat;
             $lon = $request->lon;
             $raio = $request->raio;
 
             $categorias = Subcategoria::where('ativo', 1)->pluck('fsq_id')->toArray();
 
-            $pontosTuristicos = PontoTuristico::select('*')
-                ->selectRaw(
-                    '(6371 * acos(cos(radians(?)) * cos(radians(lat)) * cos(radians(lon) - radians(?)) + sin(radians(?)) * sin(radians(lat)))) AS distancia',
-                    [$lat, $lon, $lat]
-                )
-                ->having('distancia', '<=', $raio)
-                ->whereIn('subcategoria_id', $categorias)
-                ->orderBy('distancia')
-                ->get();
+            $classPontoTuristico = new ClassPontoTuristico();
 
-            $pontosTuristicos->load([
-                'imagens',
-                'subcategoria',
-            ]);
-
-            $dbFoursquarePontos = [];
-            foreach ($pontosTuristicos as $pontosTuristico) {
-                if ($pontosTuristico->fsq_id != null) {
-                    $dbFoursquarePontos[$pontosTuristico->fsq_id] = $pontosTuristico;
-                }
-            }
-
-            $categorias = implode(',', $categorias);
-
-            $results = $foursquareService->placeSearch($lat, $lon, $raio * 1000, $categorias);
-
-            if ($results->status == 200) {
-                $results = json_decode($results->body);
-
-                // Merge dos pontos turísticos com os pontos do foursquare
-                $pontosFoursquare = [];
-                foreach ($results->results as $ponto) {
-
-                    if (isset($dbFoursquarePontos[$ponto->fsq_id])) {
-
-                        $dbFoursquarePontos[$ponto->fsq_id]->foursquare = $ponto;
-
-                    } else {
-
-                        $pontosFoursquare[] = new Fluent([
-                            'uuid' => $ponto->fsq_id,
-                            'nome' => $ponto->name,
-                            'imagens' => isset($ponto->photos[0]) ? $ponto->photos[0]->prefix . '200' . $ponto->photos[0]->suffix : null,
-                            'lat' => $ponto->geocodes->main->latitude,
-                            'lon' => $ponto->geocodes->main->longitude,
-                            'subcategoria' => new Fluent(['nome' => $ponto->categories[0]->name]),
-                            'icone' => $ponto->categories[0]->icon->prefix . '64' . $ponto->categories[0]->icon->suffix,
-                            'popularidade' => $ponto->popularity ?? 0,
-                        ]);
-                    }
-                }
-            }
-
-            $pontosTuristicos = collect($pontosFoursquare)->merge($pontosTuristicos);
+            $pontosTuristicos = $classPontoTuristico->buscar($lat, $lon, $raio, $categorias);
 
             return apiResponse(false, 'Sem erros!', ListarPontoTuristicoResource::collection($pontosTuristicos->sortBy('popularidade')));
 
@@ -96,44 +41,15 @@ class PontoTuristicoController extends Controller
     {
         try {
 
-            $pontoTuristico = PontoTuristico::where('uuid', $uuid)->orWhere('fsq_id', $uuid)->first();
+            $classPontoTuristico = new ClassPontoTuristico();
 
+            $pontoTuristico = $classPontoTuristico->buscarPorId($uuid);
+            
             if ($pontoTuristico) {
-                
-                $pontoTuristico->load([
-                    'imagens',
-                    'avaliacoes',
-                    'informacoes',
-                    'horarios',
-                ]);
-
-                if ($pontoTuristico->fsq_id != null) {
-
-                    $foursquareService = new FoursquareService();
-
-                    $results = $foursquareService->getPlaceDetails($pontoTuristico->fsq_id);
-
-                    if ($results->status == 200) {
-                        $pontoTuristico->foursquare = json_decode($results->body);
-                    } else {
-                        $pontoTuristico->update(['fsq_id' => null]);
-                    }
-                }
-
+                return apiResponse(false, 'Sem erros!', new PontoTuristicoResource($pontoTuristico));
             } else {
-
-                $foursquareService = new FoursquareService();
-
-                $results = $foursquareService->getPlaceDetails($uuid);
-
-                if ($results->status == 200) {
-                    $pontoTuristico = json_decode($results->body);
-                } else {
-                    return apiResponse(true, 'Local não encontrado', null, 404);
-                }
+                return apiResponse(true, 'Local não encontrado', null, 404);
             }
-
-            return apiResponse(false, 'Sem erros!', new PontoTuristicoResource($pontoTuristico));
 
         } catch (\Throwable $th) {
             Log::error($th);
@@ -180,7 +96,27 @@ class PontoTuristicoController extends Controller
     {
         try {
 
-            auth()->user()->favoritos()->toggle($uuid);
+            $local = auth()->user()->favoritos()->where('ponto_turistico_id', $uuid)->first();
+
+            if ($local) {
+                $local->delete();
+            } else {
+
+                $classPontoTuristico = new ClassPontoTuristico();
+                $pontoTuristico = $classPontoTuristico->buscarPorId($uuid);
+                
+                if ($pontoTuristico) {
+                    auth()->user()->favoritos()->create([
+                        'ponto_turistico_id' => $uuid,
+                        'nome' => $pontoTuristico->nome,
+                        'endereco' => $pontoTuristico->endereco,
+                        'subcategoria_id' => $pontoTuristico->subcategoria_id,
+                        'imagem' => isset($pontoTuristico->imagem[0]) ? $pontoTuristico->imagem[0]->imagem : null,
+                    ]);
+                } else {
+                    return apiResponse(true, 'Local não encontrado', null, 404);
+                }
+            }
 
             return apiResponse(false, 'Sem erros!');
             

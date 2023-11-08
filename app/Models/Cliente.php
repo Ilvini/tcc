@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Jetstream\HasProfilePhoto;
@@ -14,7 +15,8 @@ class Cliente extends Authenticatable
         HasFactory,
         Notifiable,
         HasProfilePhoto,
-        HasFactory;
+        HasFactory,
+        SoftDeletes;
 
     protected $fillable = [
         'nome',
@@ -72,6 +74,6 @@ class Cliente extends Authenticatable
 
     public function favoritos()
     {
-        return $this->belongsToMany(PontoTuristico::class, 'favoritos');
+        return $this->hasMany(Favorito::class);
     }
 }

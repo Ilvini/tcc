@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\ClienteNovaSenhaRequest;
 use App\Http\Requests\Api\ClienteRegistroRequest;
 use App\Http\Requests\Api\ClienteUpdateRequest;
 use App\Http\Resources\Api\ClienteMeResource;
+use App\Http\Resources\Api\FavoritoResource;
 use App\Http\Resources\Api\PreferenciaResource;
 use App\Models\Cliente;
 use App\Models\Subcategoria;
@@ -40,7 +42,7 @@ class ClienteController extends Controller
         }
     }
 
-    function update(ClienteUpdateRequest $request)
+    public function update(ClienteUpdateRequest $request)
     {
         try {
             $input = $request->all();
@@ -56,17 +58,42 @@ class ClienteController extends Controller
         }
     }
 
-    public function categorias()
+    public function alterarSenha(ClienteNovaSenhaRequest $request)
     {
         try {
             $cliente = auth()->user();
 
-            $categorias = $cliente->subcategorias;
+            $cliente->password = $request->password;
+            $cliente->save();
 
-            if ($categorias->isEmpty()) {
-                $categorias = Subcategoria::where('ativo', true)->get();
-                $cliente->subcategorias()->attach($categorias);
-            }
+            return apiResponse(false, 'Senha atualizada com sucesso');
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return apiResponse(true, 'Erro interno', null, 500);
+        }
+    }
+
+    public function delete()
+    {
+        try {
+            $cliente = auth()->user();
+
+            $cliente->email = $cliente->email . '_deletado_' . now()->format('YmdHis');
+            $cliente->save();
+
+            $cliente->delete();
+
+            return apiResponse(false, 'Conta excluída com sucesso');
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return apiResponse(true, 'Erro interno', null, 500);
+        }
+    }
+
+    public function categorias()
+    {
+        try {
+            $categorias = Subcategoria::where('ativo', true)->get();
 
             return apiResponse(false, 'Sem erros', PreferenciaResource::collection($categorias));
         } catch (\Throwable $th) {
@@ -91,6 +118,20 @@ class ClienteController extends Controller
                 : $cliente->subcategorias()->attach($id);
 
             return apiResponse(false, 'Sem erros');
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return apiResponse(true, 'Erro interno', null, 500);
+        }
+    }
+
+    public function favoritos()
+    {
+        try {
+            $cliente = auth()->user();
+    
+            $favoritos = $cliente->favoritos;
+
+            return apiResponse(false, 'Sem erros', FavoritoResource::collection($favoritos));
         } catch (\Throwable $th) {
             Log::error($th);
             return apiResponse(true, 'Erro interno', null, 500);

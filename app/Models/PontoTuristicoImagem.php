@@ -18,4 +18,9 @@ class PontoTuristicoImagem extends Model
     {
         return $this->belongsTo(PontoTuristico::class);
     }
+
+    public function getImagemAttribute($value)
+    {
+        return route('imagem.render', 'locais/m/' . $value);
+    }
 }

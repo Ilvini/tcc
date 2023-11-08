@@ -16,23 +16,14 @@ class ListarPontoTuristicoResource extends JsonResource
     {
         $categoria = explode(' > ', $this->subcategoria->nome);
 
-        $imagem = null;
-        if (is_object($this->imagens) && $this->imagens->first() !== null) {
-            $imagem = route('imagem.render', 'locais/g/'. $this->imagens->first()->imagem);
-        } else if (isset($this->foursquare)) {
-            $imagem = isset($this->foursquare->photos[0]) ? $this->foursquare->photos[0]->prefix . '400' . $this->foursquare->photos[0]->suffix : null;
-        } else {
-            $imagem = $this->imagens;
-        }
-
         return [
             'uuid' => $this->uuid,
             'nome' => $this->nome,
-            'imagem' => $imagem,
+            'imagem' => isset($this->imagens[0]) ? $this->imagens[0]->imagem : null,
             'lat' => (float) $this->lat,
             'lon' => (float) $this->lon,
             'categoria' => last($categoria),
-            'icone' => $this->icone,
+            'icone' => $this->subcategoria->icone,
         ];
     }
 }

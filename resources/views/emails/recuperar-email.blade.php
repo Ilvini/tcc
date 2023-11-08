@@ -24,9 +24,11 @@
                     </tr>
                     <tr>
                         <td style="text-align:center;">
-                          <a href="{{ env('FRONT_URL') }}" target="_blank">
-                            <img height="80" src="{{ route('imagem.render', 'company/g/' . $config->config['layout']['logo']) }}">
-                          </a>
+                            @isset($config->config['layout']['logo'])
+                                <a href="{{ env('FRONT_URL') }}" target="_blank">
+                                    <img height="80" src="{{ route('imagem.render', 'company/g/' . $config->config['layout']['logo']) }}">
+                                </a>
+                            @endisset
                         </td>
                     </tr>
                     <tr>

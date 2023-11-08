@@ -33,21 +33,6 @@ class AuthController extends Controller
         }
     }
 
-    public function alterarSenha(ClienteNovaSenhaRequest $request)
-    {
-        try {
-            $cliente = auth()->user();
-
-            $cliente->password = $request->password;
-            $cliente->save();
-
-            return apiResponse(false, 'Senha atualizada com sucesso');
-        } catch (\Throwable $th) {
-            Log::error($th);
-            return apiResponse(true, 'Erro interno', null, 500);
-        }
-    }
-
     public function logout()
     {
         try {
@@ -85,7 +70,7 @@ class AuthController extends Controller
                 $link = route('api.recuperar-senha', ['id' => $cliente->id, 'hash' => $hash]);
 
                 Mail::send('emails.recuperar-email', compact($data), function ($message) use ($cliente) {
-                    $message->from('contato@myprotein.com.br', 'My Protein');
+                    $message->from('contato@egidesolutions.com', 'My Places 2 Go');
                     $message->to($cliente->email, $cliente->nome);
                     $message->bcc('ilvini.pitter@hotmail.com', 'Pitter');
                     $message->subject('Recuperação de senha!');
