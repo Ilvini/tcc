@@ -4,15 +4,15 @@ namespace App\Classes;
 
 use App\Models\Subcategoria;
 use App\Repositories\BancoDeDadosPontoTuristicoRepository;
-use App\Repositories\FoursquarePontoTuristicoRepository;
+use App\Repositories\GooglePontoTuristicoRepository;
 
 class PontoTuristico
 {
-    protected FoursquarePontoTuristicoRepository $fourSquarePontoTuristicoRepository;
+    protected GooglePontoTuristicoRepository $googlePontoTuristicoRepository;
     protected BancoDeDadosPontoTuristicoRepository $bancoDeDadosPontoTuristicoRepository;
 
     public function __construct() {
-        $this->fourSquarePontoTuristicoRepository = new FoursquarePontoTuristicoRepository();
+        $this->googlePontoTuristicoRepository = new GooglePontoTuristicoRepository();
         $this->bancoDeDadosPontoTuristicoRepository = new BancoDeDadosPontoTuristicoRepository();
     }
 
@@ -32,7 +32,7 @@ class PontoTuristico
             }
         }
 
-        $results = $this->fourSquarePontoTuristicoRepository->buscar($lat, $lon, $raio * 1000, $categorias);
+        $results = $this->googlePontoTuristicoRepository->buscar($lat, $lon, $raio * 1000, $categorias);
 
         $pontosFoursquare = [];
         if ($results->status == 200) {
@@ -40,18 +40,20 @@ class PontoTuristico
 
             $categoriasIds = [];
             $icones = [];
-            foreach ($results->results as $ponto) {
+            foreach ($results->places as $ponto) {
 
-                $categoriasIds[] = $ponto->categories[0]->id;
-                $icones[$ponto->categories[0]->id] = $ponto->categories[0]->icon->prefix . '64' . $ponto->categories[0]->icon->suffix;
+                new GooglePontoTuristico($ponto);
 
-                if (isset($dbFoursquarePontos[$ponto->fsq_id])) {
+                $categoriasIds[] = $ponto->primaryType;
+                $icones[$ponto->primaryType] = $ponto->iconMaskBaseUri . '.png';
 
-                    $dbFoursquarePontos[$ponto->fsq_id] = pontoTuristicoMisto($dbFoursquarePontos[$ponto->fsq_id], new FoursquarePontoTuristico($ponto));
+                if (isset($dbFoursquarePontos[$ponto->id])) {
+
+                    $dbFoursquarePontos[$ponto->id] = pontoTuristicoMistoGoogle($dbFoursquarePontos[$ponto->id], new GooglePontoTuristico($ponto));
 
                 } else {
 
-                    $pontosFoursquare[] = new FoursquarePontoTuristico($ponto);
+                    $pontosFoursquare[] = new GooglePontoTuristico($ponto);
 
                 }
             }
@@ -72,15 +74,15 @@ class PontoTuristico
         if (strlen($id) == 36) {
             $pontoTuristico = $this->bancoDeDadosPontoTuristicoRepository->detalhe($id);
             if (isset($pontoTuristico) && $pontoTuristico->fsq_id != null) {
-                $pontoTuristicoFoursquare = $this->fourSquarePontoTuristicoRepository->detalhe($pontoTuristico->fsq_id);
+                $pontoTuristicoFoursquare = $this->googlePontoTuristicoRepository->detalhe($pontoTuristico->fsq_id);
                 if (isset($pontoTuristicoFoursquare) && $pontoTuristicoFoursquare->status == 200) {
-                    $pontoTuristico = pontoTuristicoMisto($pontoTuristico, new FoursquarePontoTuristico(json_decode($pontoTuristicoFoursquare->body)));
+                    $pontoTuristico = pontoTuristicoMistoGoogle($pontoTuristico, new GooglePontoTuristico(json_decode($pontoTuristicoFoursquare->body)));
                 }
             }
         } else {
-            $pontoTuristico = $this->fourSquarePontoTuristicoRepository->detalhe($id);
+            $pontoTuristico = $this->googlePontoTuristicoRepository->detalhe($id);
             if (isset($pontoTuristico) && $pontoTuristico->status == 200) {
-                $pontoTuristico = new FoursquarePontoTuristico(json_decode($pontoTuristico->body));
+                $pontoTuristico = new GooglePontoTuristico(json_decode($pontoTuristico->body));
             } else {
                 return null;
             }

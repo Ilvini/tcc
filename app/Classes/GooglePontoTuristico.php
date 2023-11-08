@@ -4,7 +4,7 @@ namespace App\Classes;
 
 use Illuminate\Support\Fluent;
 
-class FoursquarePontoTuristico
+class GooglePontoTuristico
 {
     public $uuid;
     public $subcategoria_id;
@@ -21,25 +21,25 @@ class FoursquarePontoTuristico
     public $horarios_populares;
     public $imagens;
     
-    public function __construct($foursquare) {
-        $this->uuid = $foursquare->fsq_id;
-        $this->subcategoria_id = $foursquare->categories[0]->id;
+    public function __construct($google) {
+        $this->uuid = $google->id;
+        $this->subcategoria_id = $google->primaryType;
         $this->subcategoria = new Fluent([
-            'nome' => $foursquare->categories[0]->name,
-            'icone' => $foursquare->categories[0]->icon->prefix . '64' . $foursquare->categories[0]->icon->suffix,
+            'nome' => $google->primaryTypeDisplayName->text,
+            'icone' => $google->iconMaskBaseUri . '.png',
         ]);
-        $this->fsq_id = $foursquare->fsq_id;
-        $this->nome = $foursquare->name;
-        $this->endereco = $foursquare->location->formatted_address;
-        $this->lat = $foursquare->geocodes->main->latitude;
-        $this->lon = $foursquare->geocodes->main->longitude;
-        $this->avaliacao = $foursquare->rating ?? 0;
-        $this->popularidade = $foursquare->popularity ?? 0;
-        $this->aberto = $foursquare->hours->open_now ?? null;
+        $this->fsq_id = $google->id;
+        $this->nome = $google->displayName->text;
+        $this->endereco = $google->formattedAddress;
+        $this->lat = $google->location->latitude;
+        $this->lon = $google->location->longitude;
+        $this->avaliacao = $google->rating ?? 0;
+        $this->popularidade = $google->popularity ?? 0;
+        $this->aberto = $google->hours->open_now ?? null;
 
         $horarios = [];
-        if (isset($foursquare->hours->regular)) {
-            foreach ($foursquare->hours->regular as $hour) {
+        if (isset($google->hours->regular)) {
+            foreach ($google->hours->regular as $hour) {
 
                 if ($hour->day == 7) {
                     $dia = 1;
@@ -71,8 +71,8 @@ class FoursquarePontoTuristico
         $this->horarios = $horarios;
 
         $horarios_populares = [];
-        if (isset($foursquare->hours_popular)) {
-            foreach ($foursquare->hours_popular as $hour) {
+        if (isset($google->hours_popular)) {
+            foreach ($google->hours_popular as $hour) {
 
                 if ($hour->day == 7) {
                     $dia = 1;
@@ -103,10 +103,10 @@ class FoursquarePontoTuristico
         $this->horarios_populares = $horarios_populares;
 
         $imagens = [];
-        if (isset($foursquare->photos)) {
-            foreach ($foursquare->photos as $photo) {
+        if (isset($google->photos)) {
+            foreach ($google->photos as $photo) {
                 $imagens[] = new Fluent([
-                    'imagem' => $photo->prefix . '400' . $photo->suffix,
+                    'imagem' => 'https://places.googleapis.com/v1/' . $photo->name . '/media?key=' . env('GOOGLE_API_KEY') . '&maxWidthPx=400',
                 ]);
             }
         }
