@@ -93,14 +93,7 @@ class ClienteController extends Controller
     public function categorias()
     {
         try {
-            $cliente = auth()->user();
-
-            $categorias = $cliente->subcategorias;
-
-            if ($categorias->isEmpty()) {
-                $categorias = Subcategoria::where('ativo', true)->get();
-                $cliente->subcategorias()->attach($categorias);
-            }
+            $categorias = Subcategoria::where('ativo', true)->get();
 
             return apiResponse(false, 'Sem erros', PreferenciaResource::collection($categorias));
         } catch (\Throwable $th) {

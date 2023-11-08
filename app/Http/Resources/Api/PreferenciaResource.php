@@ -17,6 +17,7 @@ class PreferenciaResource extends JsonResource
         return [
             'id' => $this->id,
             'nome' => $this->nome,
+            'ativo' => auth()->user()->subcategorias->contains($this->id),
         ];
     }
 }
