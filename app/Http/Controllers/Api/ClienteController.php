@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\ClienteNovaSenhaRequest;
 use App\Http\Requests\Api\ClienteRegistroRequest;
 use App\Http\Requests\Api\ClienteUpdateRequest;
 use App\Http\Resources\Api\ClienteMeResource;
@@ -41,7 +42,7 @@ class ClienteController extends Controller
         }
     }
 
-    function update(ClienteUpdateRequest $request)
+    public function update(ClienteUpdateRequest $request)
     {
         try {
             $input = $request->all();
@@ -51,6 +52,38 @@ class ClienteController extends Controller
             $cliente->update($input);
 
             return apiResponse(false, 'Sem erros', new ClienteMeResource($cliente));
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return apiResponse(true, 'Erro interno', null, 500);
+        }
+    }
+
+    public function alterarSenha(ClienteNovaSenhaRequest $request)
+    {
+        try {
+            $cliente = auth()->user();
+
+            $cliente->password = $request->password;
+            $cliente->save();
+
+            return apiResponse(false, 'Senha atualizada com sucesso');
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return apiResponse(true, 'Erro interno', null, 500);
+        }
+    }
+
+    public function delete()
+    {
+        try {
+            $cliente = auth()->user();
+
+            $cliente->email = $cliente->email . '_deletado_' . now()->format('YmdHis');
+            $cliente->save();
+
+            $cliente->delete();
+
+            return apiResponse(false, 'Conta excluída com sucesso');
         } catch (\Throwable $th) {
             Log::error($th);
             return apiResponse(true, 'Erro interno', null, 500);
