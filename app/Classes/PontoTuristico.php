@@ -44,8 +44,10 @@ class PontoTuristico
 
                 new GooglePontoTuristico($ponto);
 
-                $categoriasIds[] = $ponto->primaryType;
-                $icones[$ponto->primaryType] = $ponto->iconMaskBaseUri . '.png';
+                if (isset($ponto->primaryType)) {
+                    $categoriasIds[] = $ponto->primaryType;
+                    $icones[$ponto->primaryType] = $ponto->iconMaskBaseUri . '.png';
+                }
 
                 if (isset($dbFoursquarePontos[$ponto->id])) {
 

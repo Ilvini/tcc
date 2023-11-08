@@ -23,9 +23,9 @@ class GooglePontoTuristico
     
     public function __construct($google) {
         $this->uuid = $google->id;
-        $this->subcategoria_id = $google->primaryType;
+        $this->subcategoria_id = $google->primaryType ?? $google->types[0];
         $this->subcategoria = new Fluent([
-            'nome' => $google->primaryTypeDisplayName->text,
+            'nome' => $google->primaryTypeDisplayName->text ?? '',
             'icone' => $google->iconMaskBaseUri . '.png',
         ]);
         $this->fsq_id = $google->id;

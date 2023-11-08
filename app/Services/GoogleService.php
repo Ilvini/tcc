@@ -51,7 +51,7 @@ class GoogleService
             ],
         ];
 
-        $fields = 'places.id,places.displayName,places.location,places.formattedAddress,places.primaryType,places.primaryTypeDisplayName,places.iconMaskBaseUri,places.photos,places.rating';
+        $fields = 'places.id,places.displayName,places.location,places.formattedAddress,places.primaryType,places.types,places.primaryTypeDisplayName,places.iconMaskBaseUri,places.photos,places.rating';
         
         return $this->request('post', $uri, $data, $fields);
     }
