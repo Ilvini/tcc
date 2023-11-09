@@ -26,7 +26,7 @@ class GooglePontoTuristico
         $this->subcategoria_id = $google->primaryType ?? $google->types[0];
         $this->subcategoria = new Fluent([
             'nome' => $google->primaryTypeDisplayName->text ?? '',
-            'icone' => $google->iconMaskBaseUri . '.png',
+            'icone' => $google->iconMaskBaseUri . '.svg',
         ]);
         $this->fsq_id = $google->id;
         $this->nome = $google->displayName->text;
@@ -106,7 +106,7 @@ class GooglePontoTuristico
         if (isset($google->photos)) {
             foreach ($google->photos as $photo) {
                 $imagens[] = new Fluent([
-                    'imagem' => 'https://places.googleapis.com/v1/' . $photo->name . '/media?key=' . env('GOOGLE_API_KEY') . '&maxWidthPx=400',
+                    'imagem' => 'https://places.googleapis.com/v1/' . $photo->name . '/media?key=' . env('GOOGLE_API_KEY'),
                 ]);
             }
         }

@@ -19,7 +19,7 @@ class ListarPontoTuristicoResource extends JsonResource
         return [
             'uuid' => $this->uuid,
             'nome' => $this->nome,
-            'imagem' => isset($this->imagens[0]) ? $this->imagens[0]->imagem : null,
+            'imagem' => isset($this->imagens[0]) ? $this->imagens[0]->imagem . '&maxWidthPx=200' : null,
             'lat' => (float) $this->lat,
             'lon' => (float) $this->lon,
             'categoria' => last($categoria),

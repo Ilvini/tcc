@@ -46,7 +46,7 @@ class PontoTuristico
 
                 if (isset($ponto->primaryType)) {
                     $categoriasIds[] = $ponto->primaryType;
-                    $icones[$ponto->primaryType] = $ponto->iconMaskBaseUri . '.png';
+                    $icones[$ponto->primaryType] = $ponto->iconMaskBaseUri . '.svg';
                 }
 
                 if (isset($dbFoursquarePontos[$ponto->id])) {

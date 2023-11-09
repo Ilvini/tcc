@@ -35,7 +35,7 @@ class PontoTuristicoResource extends JsonResource
         }
 
         foreach ($this->imagens as $imagem) {
-            $imagens[] = $imagem->imagem;
+            $imagens[] = $imagem->imagem . '&maxWidthPx=500';
         }
 
         return [
