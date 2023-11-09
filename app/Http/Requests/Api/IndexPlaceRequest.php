@@ -26,9 +26,9 @@ class IndexPlaceRequest extends FormRequest
     public function rules()
     {
         return [
-            'lat' => 'required',
-            'lon' => 'required',
-            'raio' => 'required',
+            'lat' => 'required|numeric',
+            'lon' => 'required|numeric',
+            'raio' => 'required|numeric',
         ];
     }
 
@@ -41,8 +41,11 @@ class IndexPlaceRequest extends FormRequest
     {
         return [
             'lat.required' => 'O campo latitude é obrigatório',
+            'lat.numeric' => 'O campo latitude deve ser numérico',
             'lon.required' => 'O campo longitude é obrigatório',
+            'lon.numeric' => 'O campo longitude deve ser numérico',
             'raio.required' => 'O campo raio é obrigatório',
+            'raio.numeric' => 'O campo raio deve ser numérico',
         ];
     }
 
