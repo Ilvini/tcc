@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('ponto_turistico_informacaos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('cliente_id')->nullable()->constrained();
-            $table->foreignId('ponto_turistico_id')->constrained();
+            $table->string('ponto_turistico_id');
             $table->string('tipo');
             $table->string('titulo');
             $table->text('descricao');

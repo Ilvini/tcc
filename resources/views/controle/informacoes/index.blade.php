@@ -27,7 +27,6 @@
                         <thead>
                             <tr>
                                 <th>Usuário</th>
-                                <th>Local</th>
                                 <th>Título</th>
                                 <th>Descrição</th>
                                 <th>Opções</th>
@@ -37,7 +36,6 @@
                             @foreach ($informacoes as $informacao)
                                 <tr>
                                     <td>{{ $informacao->cliente->nome }}</td>
-                                    <td>{{ $informacao->pontoTuristico->nome }}</td>
                                     <td>{{ $informacao->titulo }}</td>
                                     <td>{{ $informacao->descricao }}</td>
                                     <td>
