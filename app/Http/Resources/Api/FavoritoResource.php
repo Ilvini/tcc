@@ -19,8 +19,8 @@ class FavoritoResource extends JsonResource
             'nome' => $this->nome,
             'imagem' => $this->imagem,
             'endereco' => $this->endereco,
-            'categoria' => $this->subcategoria->nome,
-            'icone' => $this->subcategoria->icone,
+            'categoria' => $this->subcategoria->nome ?? '',
+            'icone' => $this->subcategoria->icone ?? '',
         ];
     }
 }
