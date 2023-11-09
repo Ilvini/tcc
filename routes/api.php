@@ -35,6 +35,8 @@ Route::get('/pontos-turisticos/{uuid}/informacoes-adicionais', [InformacaoContro
 
 Route::get('/pontos-turisticos/{uuid}/avaliacoes', [AvaliacaoController::class, 'index']);
 
+Route::get('/guias', [GuiaController::class, 'index']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cliente/me', [ClienteController::class, 'me']);
     Route::put('/cliente/alterar', [ClienteController::class, 'update']);
@@ -55,8 +57,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/pontos-turisticos/{uuid}/informacoes-adicionais/novo', [InformacaoController::class, 'create']);
 
     Route::patch('/pontos-turisticos/{uuid}/favoritar', [PontoTuristicoController::class, 'favoritar']);
-
-    Route::get('/guias', [GuiaController::class, 'index']);
 });
 
 Route::post('/recuperar-senha', [AuthController::class, 'recuperarSenha']);
