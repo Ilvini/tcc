@@ -20,7 +20,7 @@ class AuthController extends Controller
             $cliente = Cliente::where('email', $request->email)->first();
 
             if (!$cliente || !Hash::check($request->password, $cliente->password)) {
-                return apiResponse(true, 'Credenciais inválidas', null, 401);
+                return apiResponse(true, 'Credenciais inválidas', null, 403);
             }
 
             return apiResponse(false, 'Sem erros', [
