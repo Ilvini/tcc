@@ -11,6 +11,7 @@ use App\Http\Resources\Api\ListarPontoTuristicoResource;
 use App\Http\Resources\Api\PontoTuristicoResource;
 use App\Models\PontoSugerido;
 use App\Models\Subcategoria;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class PontoTuristicoController extends Controller
@@ -25,9 +26,12 @@ class PontoTuristicoController extends Controller
 
             $categorias = Subcategoria::where('ativo', 1)->pluck('fsq_id')->toArray();
 
-            $classPontoTuristico = new ClassPontoTuristico();
+            $cacheKey = 'pontos_turisticos_' . md5(serialize([round($lat, 2), round($lon, 2), $raio, $categorias]));
 
-            $pontosTuristicos = $classPontoTuristico->buscar($lat, $lon, $raio, $categorias);
+            $pontosTuristicos = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($lat, $lon, $raio, $categorias) {
+                $classPontoTuristico = new ClassPontoTuristico();
+                return $classPontoTuristico->buscar($lat, $lon, $raio, $categorias);
+            });
 
             return apiResponse(false, 'Sem erros!', ListarPontoTuristicoResource::collection($pontosTuristicos->sortBy('popularidade')));
 
@@ -41,10 +45,11 @@ class PontoTuristicoController extends Controller
     {
         try {
 
-            $classPontoTuristico = new ClassPontoTuristico();
+            $pontoTuristico = Cache::remember('ponto_turistico_' . $uuid, now()->addHours(1), function () use ($uuid) {
+                $classPontoTuristico = new ClassPontoTuristico();
+                return $classPontoTuristico->buscarPorId($uuid);
+            });
 
-            $pontoTuristico = $classPontoTuristico->buscarPorId($uuid);
-            
             if ($pontoTuristico) {
                 return apiResponse(false, 'Sem erros!', new PontoTuristicoResource($pontoTuristico));
             } else {
