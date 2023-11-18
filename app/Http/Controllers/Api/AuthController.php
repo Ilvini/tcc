@@ -124,7 +124,7 @@ class AuthController extends Controller
             }
 
             if ($usuario->update($input)) {
-                return apiResponse(false, 'Senha alterada com sucesso', [], 401);
+                return apiResponse(false, 'Senha alterada com sucesso');
             }
         } catch (\Throwable $th) {
             Log::error($th);
