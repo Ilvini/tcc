@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\AvaliacaoController;
+use App\Http\Controllers\Api\CidadeController;
 use App\Http\Controllers\Api\ClienteController;
 use App\Http\Controllers\Api\GuiaController;
 use App\Http\Controllers\Api\InformacaoController;
@@ -34,6 +35,8 @@ Route::get('/tipos-informacoes-adicionais', [InformacaoController::class, 'tipos
 Route::get('/pontos-turisticos/{uuid}/informacoes-adicionais', [InformacaoController::class, 'index']);
 
 Route::get('/pontos-turisticos/{uuid}/avaliacoes', [AvaliacaoController::class, 'index']);
+
+Route::get('/info-city', [CidadeController::class, 'detalhe']);
 
 Route::get('/guias', [GuiaController::class, 'index']);
 
