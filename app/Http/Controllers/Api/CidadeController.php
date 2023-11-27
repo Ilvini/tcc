@@ -31,12 +31,18 @@ class CidadeController extends Controller
 
             $uf = null;
             $regiao = null;
-            if (isset($result->addresstype) && $result->addresstype == 'place') {
-                $cidade = $result->address->city;
+
+            if (isset($result->addresstype)) {
+
                 $estado = $result->address->state;
-            } else if (isset($result->addresstype) && $result->addresstype == 'municipality') {
-                $cidade = $result->name;
-                $estado = $result->address->state;
+
+                if ($result->addresstype == 'place') {
+                    $cidade = $result->address->city;
+                } else if ($result->addresstype == 'municipality') {
+                    $cidade = $result->name;
+                } else if ($result->addresstype == 'road') {
+                    $cidade = $result->address->town;
+                }
             }
 
             if (isset($result->address->region)) {
@@ -110,10 +116,13 @@ class CidadeController extends Controller
                 $urlAmigavel = preg_replace('/[`^~\'"]/', '', iconv( 'UTF-8', 'ASCII//TRANSLIT', $urlAmigavel));
                 $result = $ibgeService->getMunicipios($urlAmigavel);
 
-                if ($result != null && count($result) > 0) {
-                    $result = collect($result)->filter(function ($item) use ($uf) {
-                        return $item->microrregiao->mesorregiao->UF->sigla == $uf;
-                    })->first();
+                if ((is_array($result) && count($result) > 0) || is_object($result)) {
+
+                    if (is_array($result)) {
+                        $result = collect($result)->filter(function ($item) use ($uf) {
+                            return $item->microrregiao->mesorregiao->UF->sigla == $uf;
+                        })->first();
+                    }
         
                     $resultIndicadores = $ibgeService->getIndicadores($result->id);
                     
