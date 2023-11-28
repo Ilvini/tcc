@@ -36,11 +36,11 @@ class CidadeController extends Controller
 
                 $estado = $result->address->state;
 
-                if ($result->addresstype == 'place') {
+                if (isset($result->address->city)) {
                     $cidade = $result->address->city;
                 } else if ($result->addresstype == 'municipality') {
                     $cidade = $result->name;
-                } else if ($result->addresstype == 'road') {
+                } else if (isset($result->address->town)) {
                     $cidade = $result->address->town;
                 }
             }

@@ -38,11 +38,11 @@ class PontoTuristicoController extends Controller
                 $uf = null;
 
                 if (isset($result->addresstype)) {
-                    if ($result->addresstype == 'place') {
+                    if (isset($result->address->city)) {
                         $cidade = $result->address->city;
                     } else if ($result->addresstype == 'municipality') {
                         $cidade = $result->name;
-                    } else if ($result->addresstype == 'road') {
+                    } else if (isset($result->address->town)) {
                         $cidade = $result->address->town;
                     }
                 }
