@@ -25,36 +25,39 @@ class PontoTuristicoController extends Controller
             $lon = $request->lon;
             $raio = $request->raio;
 
-            $openStreetMapService = new OpenStreetMapService();
-            $result = $openStreetMapService->getMunicipio($lat, $lon);
-
-            $cidade = null;
-            $uf = null;
-            if (isset($result->addresstype) && $result->addresstype == 'place') {
-                $cidade = $result->address->city;
-            } else if (isset($result->addresstype) && $result->addresstype == 'municipality') {
-                $cidade = $result->name;
-            }
-
-            if (isset($result->address->{'ISO3166-2-lvl4'})) {
-                $uf = $result->address->{'ISO3166-2-lvl4'};
-                $uf = explode('-', $uf)[1];
-            }
-
             $categorias = Subcategoria::where('ativo', 1)->pluck('fsq_id')->toArray();
 
             $cacheKey = 'pontos_turisticos_' . md5(serialize([round($lat, 2), round($lon, 2), $raio, $categorias]));
 
-            $pontosTuristicos = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($lat, $lon, $raio, $categorias) {
+            $data = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($lat, $lon, $raio, $categorias) {
+
+                $openStreetMapService = new OpenStreetMapService();
+                $result = $openStreetMapService->getMunicipio($lat, $lon);
+
+                $cidade = null;
+                $uf = null;
+                if (isset($result->addresstype) && $result->addresstype == 'place') {
+                    $cidade = $result->address->city;
+                } else if (isset($result->addresstype) && $result->addresstype == 'municipality') {
+                    $cidade = $result->name;
+                }
+
+                if (isset($result->address->{'ISO3166-2-lvl4'})) {
+                    $uf = $result->address->{'ISO3166-2-lvl4'};
+                    $uf = explode('-', $uf)[1];
+                }
+
                 $classPontoTuristico = new ClassPontoTuristico();
-                return $classPontoTuristico->buscar($lat, $lon, $raio, $categorias);
+                $pontosTuristicos = $classPontoTuristico->buscar($lat, $lon, $raio, $categorias);
+
+                return [
+                    'estado' => $uf,
+                    'cidade' => $cidade,
+                    'localidades' => ListarPontoTuristicoResource::collection($pontosTuristicos->sortBy('popularidade'))
+                ];
             });
 
-            return apiResponse(false, 'Sem erros!', [
-                'estado' => $uf,
-                'cidade' => $cidade,
-                'localidades' => ListarPontoTuristicoResource::collection($pontosTuristicos->sortBy('popularidade'))
-            ]);
+            return apiResponse(false, 'Sem erros!', $data);
 
         } catch (\Throwable $th) {
             Log::error($th);
