@@ -41,7 +41,7 @@ Route::get('/info-city', [CidadeController::class, 'detalhe']);
 
 Route::get('/guias', [GuiaController::class, 'index']);
 
-Route::get('/eventos', [EventoController::class, 'eventos']);
+Route::get('/eventos', [EventoController::class, 'index']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cliente/me', [ClienteController::class, 'me']);

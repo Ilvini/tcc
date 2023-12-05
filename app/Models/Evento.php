@@ -20,5 +20,7 @@ class Evento extends Model
         'ingresso_url',
         'data_de_inicio',
         'data_de_fim',
+        'cidade',
+        'uf',
     ];
 }

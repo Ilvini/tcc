@@ -3,6 +3,7 @@
 use App\Http\Controllers\Controle\AvaliacaoController;
 use App\Http\Controllers\Controle\CategoriaController;
 use App\Http\Controllers\Controle\DashboardController;
+use App\Http\Controllers\Controle\EventoController;
 use App\Http\Controllers\Controle\InformacaoController;
 use App\Http\Controllers\Controle\PontoSugeridoController;
 use App\Http\Controllers\Controle\PontoTuristicoController;
@@ -85,5 +86,17 @@ Route::group([
         Route::get('/', 'index')->middleware('permission:Visualizar Informações Adicionais')->name('index');
         Route::get('/aprovar/{id}', 'aprovar')->middleware('permission:Aprovar Informações Adicionais')->name('aprovar');
         Route::get('/reprovar/{id}', 'reprovar')->middleware('permission:Reprovar Informações Adicionais')->name('reprovar');
+    });
+
+    /*--------------------------------------------------------------------------
+    | Rotas de Eventos
+    |--------------------------------------------------------------------------*/
+    Route::controller(EventoController::class)->prefix('eventos')->name('eventos.')->group(function () {
+        Route::get('/', 'index')->middleware('permission:Visualizar Eventos')->name('index');
+        Route::get('/criar', 'create')->middleware('permission:Cadastrar Eventos')->name('create');
+        Route::post('/salvar', 'store')->middleware('permission:Cadastrar Eventos')->name('store');
+        Route::get('/editar/{id}', 'edit')->middleware('permission:Alterar Eventos')->name('edit');
+        Route::post('/alterar/{id}', 'update')->middleware('permission:Alterar Eventos')->name('update');
+        Route::get('/excluir/{id}', 'delete')->middleware('permission:Excluir Eventos')->name('delete');
     });
 });

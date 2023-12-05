@@ -119,6 +119,15 @@ $sidebarClass = !empty($sidebarTransparent) ? 'sidebar-transparent' : '';
                     </a>
                 </li>
             @endcan
+            
+            @can('Visualizar Eventos')
+                <li class="has-sub {{ activeMenu('controle.eventos') }}">
+                    <a href="{{ route('controle.eventos.index') }}">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Eventos</span>
+                    </a>
+                </li>
+            @endcan
 
             @can('Visualizar usuário')
                 <li
