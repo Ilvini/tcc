@@ -65,7 +65,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::patch('/pontos-turisticos/{uuid}/favoritar', [PontoTuristicoController::class, 'favoritar']);
 
-    Route::post('/avaliar-app', [AppController::class, 'store']);
+    Route::post('/avaliar-app', [AppController::class, 'create']);
 });
 
 Route::post('/recuperar-senha', [AuthController::class, 'recuperarSenha']);
