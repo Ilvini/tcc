@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\AvaliacaoController;
 use App\Http\Controllers\Api\CidadeController;
 use App\Http\Controllers\Api\ClienteController;
+use App\Http\Controllers\Api\EventoController;
 use App\Http\Controllers\Api\GuiaController;
 use App\Http\Controllers\Api\InformacaoController;
 use App\Http\Controllers\Api\PontoTuristicoController;
@@ -39,6 +40,8 @@ Route::get('/pontos-turisticos/{uuid}/avaliacoes', [AvaliacaoController::class, 
 Route::get('/info-city', [CidadeController::class, 'detalhe']);
 
 Route::get('/guias', [GuiaController::class, 'index']);
+
+Route::get('/eventos', [EventoController::class, 'eventos']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cliente/me', [ClienteController::class, 'me']);
