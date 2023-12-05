@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AppController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\AvaliacaoController;
 use App\Http\Controllers\Api\CidadeController;
@@ -63,6 +64,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/pontos-turisticos/{uuid}/informacoes-adicionais/novo', [InformacaoController::class, 'create']);
 
     Route::patch('/pontos-turisticos/{uuid}/favoritar', [PontoTuristicoController::class, 'favoritar']);
+
+    Route::post('/avaliar-app', [AppController::class, 'store']);
 });
 
 Route::post('/recuperar-senha', [AuthController::class, 'recuperarSenha']);
