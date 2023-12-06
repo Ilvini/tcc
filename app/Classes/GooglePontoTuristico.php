@@ -15,10 +15,10 @@ class GooglePontoTuristico
     public $lat;
     public $lon;
     public $avaliacao;
+    public $avaliacoes;
     public $popularidade;
     public $aberto;
     public $horarios;
-    public $horarios_populares;
     public $imagens;
     
     public function __construct($google) {
@@ -35,72 +35,47 @@ class GooglePontoTuristico
         $this->lon = $google->location->longitude;
         $this->avaliacao = $google->rating ?? 0;
         $this->popularidade = $google->popularity ?? 0;
-        $this->aberto = $google->hours->open_now ?? null;
+        $this->aberto = $google->regularOpeningHours->openNow ?? null;
+
+        $avaliacoes = [];
+        if (isset($google->reviews)) {
+            foreach ($google->reviews as $key => $review) {
+                $avaliacoes[] = new Fluent([
+                    'id' => $key,
+                    'estrelas' => $review->rating,
+                    'comentario' => $review->text->text,
+                ]);
+            }
+        }
+
+        $this->avaliacoes = $avaliacoes;
 
         $horarios = [];
-        if (isset($google->hours->regular)) {
-            foreach ($google->hours->regular as $hour) {
+        if (isset($google->regularOpeningHours)) {
+            foreach ($google->regularOpeningHours->periods as $hour) {
 
-                if ($hour->day == 7) {
-                    $dia = 1;
-                } else {
-                    $dia = $hour->day + 1;
-                }
+                $dia = $hour->open->day + 1;
+
+                $abertura = str_pad($hour->open->hour, 2, '0', STR_PAD_LEFT) . ':' . str_pad($hour->open->minute, 2, '0', STR_PAD_LEFT) . ':00';
+                $fechamento = str_pad($hour->close->hour, 2, '0', STR_PAD_LEFT) . ':' . str_pad($hour->close->minute, 2, '0', STR_PAD_LEFT) . ':00';
 
                 if (isset($horarios[$dia])) {
                     $horarios[$dia] = new Fluent([
-                        'dia_semana' => $hour->day,
-                        'abertura' => substr($hour->open, 0, 2) . ':' . substr($hour->open, 2, 2) . ':00',
-                        'fechamento' => substr($hour->close, 0, 2) . ':' . substr($hour->close, 2, 2) . ':00',
-                        'dia_todo' => isset($hour->all_day) ? $hour->all_day : false,
-                        'abertura_2' => substr($hour->open, 0, 2) . ':' . substr($hour->open, 2, 2) . ':00',
-                        'fechamento_2' => substr($hour->close, 0, 2) . ':' . substr($hour->close, 2, 2) . ':00',
+                        'abertura_2' => $abertura,
+                        'fechamento_2' => $fechamento,
                     ]);
                 } else {
                     $horarios[$dia] = new Fluent([
-                        'dia_semana' => $hour->day,
-                        'abertura' => substr($hour->open, 0, 2) . ':' . substr($hour->open, 2, 2) . ':00',
-                        'fechamento' => substr($hour->close, 0, 2) . ':' . substr($hour->close, 2, 2) . ':00',
+                        'dia_semana' => $dia,
+                        'abertura' => $abertura,
+                        'fechamento' => $fechamento,
                         'dia_todo' => isset($hour->all_day) ? $hour->all_day : false,
                     ]);
                 }
-
             }
         }
 
         $this->horarios = $horarios;
-
-        $horarios_populares = [];
-        if (isset($google->hours_popular)) {
-            foreach ($google->hours_popular as $hour) {
-
-                if ($hour->day == 7) {
-                    $dia = 1;
-                } else {
-                    $dia = $hour->day + 1;
-                }
-
-                if (isset($horarios_populares[$dia])) {
-                    $horario = $horarios_populares[$dia]['horario'] .= ' e ' . substr($hour->open, 0, 2) . ':' 
-                        . substr($hour->open, 2, 2) . ' ás ' 
-                        . substr($hour->close, 0, 2) . ':' 
-                        . substr($hour->close, 2, 2);
-                    
-                } else {
-                    $horario = substr($hour->open, 0, 2) . ':' 
-                        . substr($hour->open, 2, 2) . ' ás ' 
-                        . substr($hour->close, 0, 2) . ':' 
-                        . substr($hour->close, 2, 2);
-                }
-
-                $horarios_populares[$dia] = [
-                    'nome' => diaSemana($dia),
-                    'horario' => $horario,
-                ];
-            }
-        }
-
-        $this->horarios_populares = $horarios_populares;
 
         $imagens = [];
         if (isset($google->photos)) {
@@ -160,10 +135,6 @@ class GooglePontoTuristico
 
     public function getHorarios() {
         return $this->horarios;
-    }
-
-    public function getHorariosPopulares() {
-        return $this->horarios_populares;
     }
 
     public function getImagens() {

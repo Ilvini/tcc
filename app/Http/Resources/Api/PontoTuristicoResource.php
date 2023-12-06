@@ -20,8 +20,8 @@ class PontoTuristicoResource extends JsonResource
         $imagens = [];
         $horarios = [];
 
-        $favorito = false;
-        $avaliado = false;
+        $favorito = null;
+        $avaliado = null;
 
         if (request()->bearerToken() != null) {
             $token = explode('|', request()->bearerToken());
