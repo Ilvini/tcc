@@ -64,7 +64,7 @@ class GoogleService
             'languageCode' => 'pt',
         ];
 
-        $fields = 'id,displayName,location,formattedAddress,primaryType,primaryTypeDisplayName,iconMaskBaseUri,photos,rating';
+        $fields = 'id,displayName,location,formattedAddress,primaryType,primaryTypeDisplayName,iconMaskBaseUri,photos,rating,regularOpeningHours,reviews';
         
         return $this->request('get', $uri, $data, $fields);
     }
