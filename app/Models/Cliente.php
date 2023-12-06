@@ -67,6 +67,15 @@ class Cliente extends Authenticatable
         });
     }
 
+    protected function defaultProfilePhotoUrl()
+    {
+        $name = trim(collect(explode(' ', $this->nome))->map(function ($segment) {
+            return mb_substr($segment, 0, 1);
+        })->join(' '));
+
+        return 'https://ui-avatars.com/api/?name='.urlencode($name).'&color=7F9CF5&background=EBF4FF';
+    }
+
     public function subcategorias()
     {
         return $this->belongsToMany(Subcategoria::class);

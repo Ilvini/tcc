@@ -14,10 +14,19 @@ class ClienteMeResource extends JsonResource
      */
     public function toArray($request)
     {
+        $foto = null;
+
+        if (isset($this->img_perfil)) {
+            $foto = route('imagem.render', 'clientes/p/' . $this->img_perfil);
+        } else {
+            $foto = $this->profile_photo_url;
+        }
+
         return [
             'nome' => $this->nome,
             'email' => $this->email,
             'celular' => $this->celular,
+            'foto' => $foto,
         ];
     }
 }

@@ -48,6 +48,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cliente/me', [ClienteController::class, 'me']);
     Route::put('/cliente/alterar', [ClienteController::class, 'update']);
     Route::put('/cliente/alterar-senha', [ClienteController::class, 'alterarSenha']);
+    Route::post('/cliente/alterar-foto', [ClienteController::class, 'alterarFoto']);
     Route::delete('/cliente', [ClienteController::class, 'delete']);
     
     Route::get('/cliente/favoritos', [ClienteController::class, 'favoritos']);

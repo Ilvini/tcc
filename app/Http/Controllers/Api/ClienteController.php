@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\ClienteAlterarImagemRequest;
 use App\Http\Requests\Api\ClienteNovaSenhaRequest;
 use App\Http\Requests\Api\ClienteRegistroRequest;
 use App\Http\Requests\Api\ClienteUpdateRequest;
@@ -12,9 +13,24 @@ use App\Http\Resources\Api\PreferenciaResource;
 use App\Models\Cliente;
 use App\Models\Subcategoria;
 use Illuminate\Support\Facades\Log;
+use IlviniPitter\ImagemUpload\ImagemUpload;
 
 class ClienteController extends Controller
 {
+    private $foto;
+
+    public function __construct()
+    {
+        $this->foto = [
+            'input_file' => 'foto',
+            'destino' => 'clientes/',
+            'resolucao' => [
+                'p' => ['h' => 200, 'w' => 200],
+                'm' => ['h' => 400, 'w' => 400],
+            ],
+        ];
+    }
+
     public function me()
     {
         try {
@@ -47,6 +63,7 @@ class ClienteController extends Controller
         try {
             $input = $request->all();
 
+            /** @var Cliente */
             $cliente = auth()->user();
 
             $cliente->update($input);
@@ -61,6 +78,7 @@ class ClienteController extends Controller
     public function alterarSenha(ClienteNovaSenhaRequest $request)
     {
         try {
+            /** @var Cliente */
             $cliente = auth()->user();
 
             $cliente->password = $request->password;
@@ -76,6 +94,7 @@ class ClienteController extends Controller
     public function delete()
     {
         try {
+            /** @var Cliente */
             $cliente = auth()->user();
 
             $cliente->email = $cliente->email . '_deletado_' . now()->format('YmdHis');
@@ -105,6 +124,7 @@ class ClienteController extends Controller
     public function mudarCategoria($id)
     {
         try {
+            /** @var Cliente */
             $cliente = auth()->user();
 
             $subcategoria = Subcategoria::find($id);
@@ -132,6 +152,22 @@ class ClienteController extends Controller
             $favoritos = $cliente->favoritos;
 
             return apiResponse(false, 'Sem erros', FavoritoResource::collection($favoritos));
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return apiResponse(true, 'Erro interno', null, 500);
+        }
+    }
+
+    public function alterarFoto(ClienteAlterarImagemRequest $request)
+    {
+        try {
+            /** @var Cliente */
+            $cliente = auth()->user();
+
+            $cliente->img_perfil = ImagemUpload::salva($this->foto);
+            $cliente->save();
+
+            return apiResponse(false, 'Sem erros', new ClienteMeResource($cliente));
         } catch (\Throwable $th) {
             Log::error($th);
             return apiResponse(true, 'Erro interno', null, 500);
