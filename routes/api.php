@@ -72,3 +72,5 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('/recuperar-senha', [AuthController::class, 'recuperarSenha']);
 Route::get('/recuperar-senha/{id}/{hash}', [AuthController::class, 'novaSenhaForm'])->name('api.recuperar-senha');
 Route::put('/recuperar-senha/{id}/{hash}', [AuthController::class, 'novaSenha']);
+
+Route::post('/contato', [AppController::class, 'contato']);
