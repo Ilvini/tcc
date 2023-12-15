@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class IndexPlaceRequest extends FormRequest
+class ListarEventoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,9 +26,8 @@ class IndexPlaceRequest extends FormRequest
     public function rules()
     {
         return [
-            'lat' => 'required|numeric',
-            'lon' => 'required|numeric',
-            'raio' => 'required|numeric',
+            'estado' => 'required|max:2',
+            'cidade' => 'required',
         ];
     }
 
@@ -40,12 +39,9 @@ class IndexPlaceRequest extends FormRequest
     public function messages()
     {
         return [
-            'lat.required' => 'O campo latitude é obrigatório',
-            'lat.numeric' => 'O campo latitude deve ser numérico',
-            'lon.required' => 'O campo longitude é obrigatório',
-            'lon.numeric' => 'O campo longitude deve ser numérico',
-            'raio.required' => 'O campo raio é obrigatório',
-            'raio.numeric' => 'O campo raio deve ser numérico',
+            'estado.required' => 'O campo estado é obrigatório',
+            'estado.max' => 'O campo estado deve ter no máximo 2 caracteres',
+            'cidade.required' => 'O campo cidade é obrigatório',
         ];
     }
 

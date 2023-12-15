@@ -13,14 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('ponto_turistico_informacaos', function (Blueprint $table) {
+        Schema::create('app_contatos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('cliente_id')->nullable()->constrained();
-            $table->string('ponto_turistico_id');
-            $table->string('tipo');
-            $table->string('titulo');
+            $table->string('email');
+            $table->string('assunto');
             $table->text('descricao');
-            $table->boolean('aprovado')->default(false);
             $table->timestamps();
         });
     }
@@ -32,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ponto_turistico_informacaos');
+        Schema::dropIfExists('app_contatos');
     }
 };

@@ -1,6 +1,7 @@
 <?php
 
 use App\Classes\FoursquarePontoTuristico;
+use App\Classes\GooglePontoTuristico;
 use App\Models\PontoTuristico;
 use App\Services\ApiMessage;
 use Illuminate\Support\Fluent;
@@ -28,6 +29,27 @@ if (!function_exists('pontoTuristicoMisto')) {
             'horarios' => $pontoTuristico->horarios ?? $foursquarePontoTuristico->horarios,
             'horarios_populares' => $pontoTuristico->horarios_populares ?? $foursquarePontoTuristico->horarios_populares,
             'imagens' => $pontoTuristico->imagens ?? $foursquarePontoTuristico->imagens,
+        ]);
+    }
+}
+
+if (!function_exists('pontoTuristicoMistoGoogle')) {
+    function pontoTuristicoMistoGoogle(PontoTuristico $pontoTuristico = null, GooglePontoTuristico $googlePontoTuristico) {
+        return new Fluent([
+            'uuid' => $pontoTuristico->uuid ?? $googlePontoTuristico->uuid,
+            'subcategoria_id' => $pontoTuristico->subcategoria_id ?? $googlePontoTuristico->subcategoria_id,
+            'subcategoria' => $pontoTuristico->subcategoria ?? $googlePontoTuristico->subcategoria,
+            'fsq_id' => $pontoTuristico->fsq_id ?? $googlePontoTuristico->fsq_id,
+            'nome' => $pontoTuristico->nome ?? $googlePontoTuristico->nome,
+            'endereco' => $pontoTuristico->endereco ?? $googlePontoTuristico->endereco,
+            'lat' => $pontoTuristico->lat ?? $googlePontoTuristico->lat,
+            'lon' => $pontoTuristico->lon ?? $googlePontoTuristico->lon,
+            'avaliacao' => $pontoTuristico->avaliacao ?? $googlePontoTuristico->avaliacao,
+            'popularidade' => $pontoTuristico->popularidade ?? $googlePontoTuristico->popularidade,
+            'aberto' => $pontoTuristico->aberto ?? $googlePontoTuristico->aberto,
+            'horarios' => $pontoTuristico->horarios ?? $googlePontoTuristico->horarios,
+            'horarios_populares' => $pontoTuristico->horarios_populares ?? $googlePontoTuristico->horarios_populares,
+            'imagens' => $pontoTuristico->imagens ?? $googlePontoTuristico->imagens,
         ]);
     }
 }

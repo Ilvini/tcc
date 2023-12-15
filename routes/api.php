@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Controllers\Api\AppController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\AvaliacaoController;
+use App\Http\Controllers\Api\CidadeController;
 use App\Http\Controllers\Api\ClienteController;
+use App\Http\Controllers\Api\EventoController;
 use App\Http\Controllers\Api\GuiaController;
 use App\Http\Controllers\Api\InformacaoController;
 use App\Http\Controllers\Api\PontoTuristicoController;
@@ -35,10 +38,17 @@ Route::get('/pontos-turisticos/{uuid}/informacoes-adicionais', [InformacaoContro
 
 Route::get('/pontos-turisticos/{uuid}/avaliacoes', [AvaliacaoController::class, 'index']);
 
+Route::get('/info-city', [CidadeController::class, 'detalhe']);
+
+Route::get('/guias', [GuiaController::class, 'index']);
+
+Route::get('/eventos', [EventoController::class, 'index']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cliente/me', [ClienteController::class, 'me']);
     Route::put('/cliente/alterar', [ClienteController::class, 'update']);
     Route::put('/cliente/alterar-senha', [ClienteController::class, 'alterarSenha']);
+    Route::post('/cliente/alterar-foto', [ClienteController::class, 'alterarFoto']);
     Route::delete('/cliente', [ClienteController::class, 'delete']);
     
     Route::get('/cliente/favoritos', [ClienteController::class, 'favoritos']);
@@ -56,9 +66,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::patch('/pontos-turisticos/{uuid}/favoritar', [PontoTuristicoController::class, 'favoritar']);
 
-    Route::get('/guias', [GuiaController::class, 'index']);
+    Route::post('/avaliar-app', [AppController::class, 'create']);
 });
 
 Route::post('/recuperar-senha', [AuthController::class, 'recuperarSenha']);
 Route::get('/recuperar-senha/{id}/{hash}', [AuthController::class, 'novaSenhaForm'])->name('api.recuperar-senha');
 Route::put('/recuperar-senha/{id}/{hash}', [AuthController::class, 'novaSenha']);
+
+Route::post('/contato', [AppController::class, 'contato']);

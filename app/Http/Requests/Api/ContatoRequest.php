@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class IndexPlaceRequest extends FormRequest
+class ContatoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,9 +26,9 @@ class IndexPlaceRequest extends FormRequest
     public function rules()
     {
         return [
-            'lat' => 'required|numeric',
-            'lon' => 'required|numeric',
-            'raio' => 'required|numeric',
+            'email' => 'required|email',
+            'assunto' => 'required',
+            'descricao' => 'required',
         ];
     }
 
@@ -40,12 +40,10 @@ class IndexPlaceRequest extends FormRequest
     public function messages()
     {
         return [
-            'lat.required' => 'O campo latitude é obrigatório',
-            'lat.numeric' => 'O campo latitude deve ser numérico',
-            'lon.required' => 'O campo longitude é obrigatório',
-            'lon.numeric' => 'O campo longitude deve ser numérico',
-            'raio.required' => 'O campo raio é obrigatório',
-            'raio.numeric' => 'O campo raio deve ser numérico',
+            'email.required' => 'O campo email é obrigatório',
+            'email.email' => 'O campo email deve ser um email válido',
+            'assunto.required' => 'O campo assunto é obrigatório',
+            'descricao.required' => 'O campo descrição é obrigatório',
         ];
     }
 

@@ -20,8 +20,8 @@ class PontoTuristicoResource extends JsonResource
         $imagens = [];
         $horarios = [];
 
-        $favorito = false;
-        $avaliado = false;
+        $favorito = null;
+        $avaliado = null;
 
         if (request()->bearerToken() != null) {
             $token = explode('|', request()->bearerToken());
@@ -35,7 +35,7 @@ class PontoTuristicoResource extends JsonResource
         }
 
         foreach ($this->imagens as $imagem) {
-            $imagens[] = $imagem->imagem;
+            $imagens[] = $imagem->imagem . '&maxWidthPx=500';
         }
 
         return [

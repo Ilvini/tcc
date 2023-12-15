@@ -20,7 +20,7 @@ class AuthController extends Controller
             $cliente = Cliente::where('email', $request->email)->first();
 
             if (!$cliente || !Hash::check($request->password, $cliente->password)) {
-                return apiResponse(true, 'Credenciais inválidas', null, 401);
+                return apiResponse(true, 'Credenciais inválidas', null, 403);
             }
 
             return apiResponse(false, 'Sem erros', [
@@ -124,7 +124,7 @@ class AuthController extends Controller
             }
 
             if ($usuario->update($input)) {
-                return apiResponse(false, 'Senha alterada com sucesso', [], 401);
+                return apiResponse(false, 'Senha alterada com sucesso');
             }
         } catch (\Throwable $th) {
             Log::error($th);

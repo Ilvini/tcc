@@ -4,7 +4,7 @@ namespace App\Http\Resources\Api;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class FavoritoResource extends JsonResource
+class EventoResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,12 +15,16 @@ class FavoritoResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->ponto_turistico_id,
+            'id' => (int) $this->id,
             'nome' => $this->nome,
-            'imagem' => $this->imagem,
+            'descricao' => $this->descricao,
+            'gratuito' => (bool) $this->gratuito,
+            'valor' => $this->valor,
+            'imagem_url' => $this->imagem_url,
+            'ingresso_url' => $this->ingresso_url,
+            'data_de_inicio' => $this->data_de_inicio,
+            'data_de_fim' => $this->data_de_fim,
             'endereco' => $this->endereco,
-            'categoria' => $this->subcategoria->nome ?? '',
-            'icone' => $this->subcategoria->icone ?? '',
         ];
     }
 }

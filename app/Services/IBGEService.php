@@ -5,7 +5,7 @@ namespace App\Services;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class WikipediaService
+class IBGEService
 {
     private function request($metodo, $url, $data)
     {
@@ -17,7 +17,7 @@ class WikipediaService
         ->$metodo($url);
 
         if ($response->status() !== 200) {
-            Log::error('Erro ao conectar com a API da Wikipédia', [
+            Log::error('Erro ao conectar com a API do IBGE', [
                 'url' => $url,
                 'data' => $data,
                 'response' => $response->body(),
@@ -29,23 +29,24 @@ class WikipediaService
         return json_decode($response->body());
     }
 
-    public function search($title)
+    public function getMunicipios($urlAmigavel)
     {
-        $uri = "https://pt.wikipedia.org/w/api.php?action=query&list=search&srsearch={$title}&utf8=&format=json";
+        $uri = "https://servicodados.ibge.gov.br/api/v1/localidades/municipios/{$urlAmigavel}";
         
         return $this->request('get', $uri, []);
     }
 
-    public function getDetails($title)
+    public function getIndicadores($codMunicipio)
     {
-        $uri = "https://pt.wikipedia.org/w/api.php?action=query&prop=extracts&exlimit=1&titles={$title}&explaintext=1&exsectionformat=plain&format=json";
+        $idsIndicadores = '96385|96414';
+        $uri = "https://servicodados.ibge.gov.br/api/v1/pesquisas/indicadores/{$idsIndicadores}/resultados/{$codMunicipio}";
         
         return $this->request('get', $uri, []);
     }
 
-    public function getFicheiro($title)
+    public function getBiblioteca($codMunicipio)
     {
-        $uri = "https://pt.wikipedia.org/w/api.php?action=query&prop=imageinfo&iiprop=url&titles={$title}&format=json";
+        $uri = "https://servicodados.ibge.gov.br/api/v1/biblioteca?aspas=3&codmun={$codMunicipio}";
         
         return $this->request('get', $uri, []);
     }

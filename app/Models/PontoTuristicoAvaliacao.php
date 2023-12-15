@@ -14,6 +14,7 @@ class PontoTuristicoAvaliacao extends Model
         'ponto_turistico_id',
         'estrelas',
         'comentario',
+        'aprovado',
     ];
 
     public function cliente()

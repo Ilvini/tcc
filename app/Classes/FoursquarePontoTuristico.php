@@ -166,12 +166,8 @@ class FoursquarePontoTuristico
         return $this->horarios_populares;
     }
 
-    public function getImagens($tam = 400) {
-        $imagens = [];
-        foreach ($this->imagens as $foto) {
-            $imagens[] = str_replace('400', $tam, $foto);
-        }
-        return $imagens;
+    public function getImagens() {
+        return $this->imagens;
     }
 
 }
