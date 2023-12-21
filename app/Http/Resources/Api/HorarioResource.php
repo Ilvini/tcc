@@ -19,10 +19,16 @@ class HorarioResource extends JsonResource
         if ($this->dia_todo) {
             $horario = 'Aberto 24 horas';
         } else {
-            $abertura = explode(':', $this->abertura);
-            $fechamento = explode(':', $this->fechamento);
 
-            $horario = $abertura[0] .':'. $abertura[1] . ' ás ' . $fechamento[0] .':'. $fechamento[1];
+            if (isset($this->abertura)) {
+                $abertura = explode(':', $this->abertura);
+                $horario = $abertura[0] .':'. $abertura[1];
+            }
+
+            if (isset($this->fechamento)) {
+                $fechamento = explode(':', $this->fechamento);
+                $horario .= ' ás ' . $fechamento[0] .':'. $fechamento[1];
+            }
 
             if (isset($this->abertura_2)) {
                 $abertura_2 = explode(':', $this->abertura_2);
