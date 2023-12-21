@@ -61,8 +61,12 @@ class GooglePontoTuristico
 
                 if (isset($horarios[$dia])) {
                     $horarios[$dia] = new Fluent([
+                        'dia_semana' => $horarios[$dia]->dia_semana,
+                        'abertura' => $horarios[$dia]->abertura,
+                        'fechamento' => $horarios[$dia]->fechamento,
                         'abertura_2' => $abertura,
                         'fechamento_2' => $fechamento,
+                        'dia_todo' => $horarios[$dia]->dia_todo,
                     ]);
                 } else {
                     $horarios[$dia] = new Fluent([
