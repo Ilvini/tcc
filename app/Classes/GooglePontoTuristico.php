@@ -2,6 +2,7 @@
 
 namespace App\Classes;
 
+use App\Services\WikipediaService;
 use Illuminate\Support\Fluent;
 
 class GooglePontoTuristico
@@ -20,6 +21,7 @@ class GooglePontoTuristico
     public $aberto;
     public $horarios;
     public $imagens;
+    public $informacoes;
     
     public function __construct($google) {
         $this->uuid = $google->id;
@@ -91,6 +93,27 @@ class GooglePontoTuristico
         }
 
         $this->imagens = $imagens;
+
+        $descricao = null;
+
+        $wikipediaService = new WikipediaService();
+
+        $results = $wikipediaService->search($google->displayName->text);
+        if ($results && isset($results->query->search[0])) {
+            $result = $wikipediaService->getDetails($results->query->search[0]->title);
+            if ($result) {
+                $descricao = new Fluent([
+                    'id' => 1,
+                    'tipo' => 'Descricao',
+                    'titulo' => $result->query->pages->{key($result->query->pages)}->title,
+                    'descricao' => $result->query->pages->{key($result->query->pages)}->extract,
+                ]);
+            }
+        }
+
+        if (isset($descricao)) {
+            $this->informacoes[] = $descricao;
+        }
     }
 
     public function getUuid() {
