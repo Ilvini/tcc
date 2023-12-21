@@ -35,7 +35,7 @@
                         <tbody>
                             @foreach ($informacoes as $informacao)
                                 <tr>
-                                    <td>{{ $informacao->cliente->nome }}</td>
+                                    <td>{{ $informacao->cliente->nome ?? '- - -' }}</td>
                                     <td>{{ $informacao->titulo }}</td>
                                     <td>{{ $informacao->descricao }}</td>
                                     <td>
