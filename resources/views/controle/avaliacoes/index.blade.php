@@ -35,7 +35,7 @@
                         <tbody>
                             @foreach ($avaliacoes as $avaliacao)
                                 <tr>
-                                    <td>{{ $avaliacao->cliente->nome }}</td>
+                                    <td>{{ $avaliacao->cliente->nome ?? '- - -' }}</td>
                                     <td>{{ $avaliacao->estrelas }}</td>
                                     <td>{{ $avaliacao->comentario }}</td>
                                     <td>
