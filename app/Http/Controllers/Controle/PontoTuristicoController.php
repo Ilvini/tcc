@@ -39,7 +39,7 @@ class PontoTuristicoController extends Controller
 
             PontoTuristico::create($input);
     
-            return redirect()->route('controle.pontos-turisticos.index')->with('success', 'Ponto turístico cadastrado com sucesso!');
+            return redirect()->route('controle.pontos-turisticos.index')->with('msg', 'Ponto turístico cadastrado com sucesso!');
 
         } catch (\Throwable $th) {
             Log::error($th);
@@ -72,7 +72,7 @@ class PontoTuristicoController extends Controller
             $pontoTuristico = PontoTuristico::findOrFail($id);
             $pontoTuristico->update($input);
     
-            return redirect()->route('controle.pontos-turisticos.index')->with('success', 'Ponto turístico atualizado com sucesso!');
+            return redirect()->route('controle.pontos-turisticos.index')->with('msg', 'Ponto turístico atualizado com sucesso!');
 
         } catch (\Throwable $th) {
             Log::error($th);
@@ -87,7 +87,7 @@ class PontoTuristicoController extends Controller
             $pontoTuristico = PontoTuristico::findOrFail($id);
             $pontoTuristico->delete();
     
-            return redirect()->route('controle.pontos-turisticos.index')->with('success', 'Ponto turístico excluído com sucesso!');
+            return redirect()->route('controle.pontos-turisticos.index')->with('msg', 'Ponto turístico excluído com sucesso!');
 
         } catch (\Throwable $th) {
             Log::error($th);
@@ -120,7 +120,7 @@ class PontoTuristicoController extends Controller
                 ]);
             }
     
-            return redirect()->back()->with('success', 'Horários atualizados com sucesso!');
+            return redirect()->back()->with('msg', 'Horários atualizados com sucesso!');
 
         } catch (\Throwable $th) {
             Log::error($th);
