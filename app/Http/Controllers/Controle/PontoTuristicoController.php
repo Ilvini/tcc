@@ -80,7 +80,7 @@ class PontoTuristicoController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function delete($id)
     {
         try {
 
