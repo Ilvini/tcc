@@ -104,14 +104,20 @@ class GooglePontoTuristico
     
             $results = $wikipediaService->search($google->displayName->text);
             if ($results && isset($results->query->search[0])) {
-                $result = $wikipediaService->getDetails($results->query->search[0]->title);
-                if ($result) {
-                    $descricao = new Fluent([
-                        'id' => 1,
-                        'tipo' => 'Descricao',
-                        'titulo' => $result->query->pages->{key($result->query->pages)}->title,
-                        'descricao' => $result->query->pages->{key($result->query->pages)}->extract,
-                    ]);
+
+                $similaridade = similar_text($google->displayName->text, $results->query->search[0]->title);
+                $percent = ($similaridade * 100) / strlen($google->displayName->text);
+
+                if ($percent > 80) {
+                    $result = $wikipediaService->getDetails($results->query->search[0]->title);
+                    if ($result) {
+                        $descricao = new Fluent([
+                            'id' => 1,
+                            'tipo' => 'Descricao',
+                            'titulo' => $result->query->pages->{key($result->query->pages)}->title,
+                            'descricao' => $result->query->pages->{key($result->query->pages)}->extract,
+                        ]);
+                    }
                 }
             }
     
