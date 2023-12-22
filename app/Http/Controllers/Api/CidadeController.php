@@ -63,6 +63,8 @@ class CidadeController extends Controller
                 // $requestGoogle = $googleService->getPlacesBySearch($cidade . ' ' . $estado);
                 // dd(json_decode($requestGoogle->body));
 
+                $bandeira = null;
+
                 $wikiService = new WikipediaService();
                 $requestWiki = $wikiService->search($cidade . ' ' . $estado);
 
