@@ -23,7 +23,7 @@ class GooglePontoTuristico
     public $imagens;
     public $informacoes;
     
-    public function __construct($google) {
+    public function __construct($google, $detalhe = false) {
         $this->uuid = $google->id;
         $this->subcategoria_id = $google->primaryType ?? $google->types[0] ?? null;
         $this->subcategoria = new Fluent([
@@ -94,25 +94,27 @@ class GooglePontoTuristico
 
         $this->imagens = $imagens;
 
-        $descricao = null;
-
-        $wikipediaService = new WikipediaService();
-
-        $results = $wikipediaService->search($google->displayName->text);
-        if ($results && isset($results->query->search[0])) {
-            $result = $wikipediaService->getDetails($results->query->search[0]->title);
-            if ($result) {
-                $descricao = new Fluent([
-                    'id' => 1,
-                    'tipo' => 'Descricao',
-                    'titulo' => $result->query->pages->{key($result->query->pages)}->title,
-                    'descricao' => $result->query->pages->{key($result->query->pages)}->extract,
-                ]);
+        if ($detalhe) {
+            $descricao = null;
+    
+            $wikipediaService = new WikipediaService();
+    
+            $results = $wikipediaService->search($google->displayName->text);
+            if ($results && isset($results->query->search[0])) {
+                $result = $wikipediaService->getDetails($results->query->search[0]->title);
+                if ($result) {
+                    $descricao = new Fluent([
+                        'id' => 1,
+                        'tipo' => 'Descricao',
+                        'titulo' => $result->query->pages->{key($result->query->pages)}->title,
+                        'descricao' => $result->query->pages->{key($result->query->pages)}->extract,
+                    ]);
+                }
             }
-        }
-
-        if (isset($descricao)) {
-            $this->informacoes[] = $descricao;
+    
+            if (isset($descricao)) {
+                $this->informacoes[] = $descricao;
+            }
         }
     }
 
