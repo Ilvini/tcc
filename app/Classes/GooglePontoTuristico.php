@@ -45,7 +45,7 @@ class GooglePontoTuristico
                 $avaliacoes[] = new Fluent([
                     'id' => $key,
                     'estrelas' => $review->rating,
-                    'comentario' => $review->text->text,
+                    'comentario' => $review->text->text ?? null,
                 ]);
             }
         }
