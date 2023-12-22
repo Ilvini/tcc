@@ -58,8 +58,11 @@ class GooglePontoTuristico
 
                 $dia = $hour->open->day + 1;
 
+                $fechamento = null;
                 $abertura = str_pad($hour->open->hour, 2, '0', STR_PAD_LEFT) . ':' . str_pad($hour->open->minute, 2, '0', STR_PAD_LEFT) . ':00';
-                $fechamento = str_pad($hour->close->hour, 2, '0', STR_PAD_LEFT) . ':' . str_pad($hour->close->minute, 2, '0', STR_PAD_LEFT) . ':00';
+                if (isset($hour->close)) {
+                    $fechamento = str_pad($hour->close->hour, 2, '0', STR_PAD_LEFT) . ':' . str_pad($hour->close->minute, 2, '0', STR_PAD_LEFT) . ':00';
+                }
 
                 if (isset($horarios[$dia])) {
                     $horarios[$dia] = new Fluent([
