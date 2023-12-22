@@ -152,7 +152,7 @@ class CidadeController extends Controller
                 return [
                     'cidade' => $cidade,
                     'estado' => $estado,
-                    'imagem_bandeira_url' => $bandeira,
+                    'imagem_bandeira_url' => $bandeira ?? null,
                     'historia' => $historico ?? $descricao,
                     'formacao_administrativa' => $formacaoAdministrativa ?? null,
                     'dados_gerais' => [
