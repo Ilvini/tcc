@@ -78,13 +78,13 @@ class PontoTuristico
             if (isset($pontoTuristico) && $pontoTuristico->fsq_id != null) {
                 $pontoTuristicoFoursquare = $this->googlePontoTuristicoRepository->detalhe($pontoTuristico->fsq_id);
                 if (isset($pontoTuristicoFoursquare) && $pontoTuristicoFoursquare->status == 200) {
-                    $pontoTuristico = pontoTuristicoMistoGoogle($pontoTuristico, new GooglePontoTuristico(json_decode($pontoTuristicoFoursquare->body)));
+                    $pontoTuristico = pontoTuristicoMistoGoogle($pontoTuristico, new GooglePontoTuristico(json_decode($pontoTuristicoFoursquare->body), true));
                 }
             }
         } else {
             $pontoTuristico = $this->googlePontoTuristicoRepository->detalhe($id);
             if (isset($pontoTuristico) && $pontoTuristico->status == 200) {
-                $pontoTuristico = new GooglePontoTuristico(json_decode($pontoTuristico->body));
+                $pontoTuristico = new GooglePontoTuristico(json_decode($pontoTuristico->body), true);
             } else {
                 return null;
             }
