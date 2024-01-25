@@ -70,7 +70,7 @@ class AuthController extends Controller
                 $link = route('api.recuperar-senha', ['id' => $cliente->id, 'hash' => $hash]);
 
                 Mail::send('emails.recuperar-email', compact($data), function ($message) use ($cliente) {
-                    $message->from('contato@egidesolutions.com', 'My Places 2 Go');
+                    $message->from('contato@myplaces2go.com.br', 'My Places 2 Go');
                     $message->to($cliente->email, $cliente->nome);
                     $message->bcc('ilvini.pitter@hotmail.com', 'Pitter');
                     $message->subject('Recuperação de senha!');
