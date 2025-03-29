@@ -27,7 +27,7 @@ jobs:
         uses: milanmk/actions-file-deployer@master
         with:
           remote-protocol: "sftp"
-          remote-host: "149.100.155.251"
+          remote-host: "147.93.64.244"
           remote-user: "u539902968"
           remote-port: "65002"
           remote-password: '${{ secrets.FTP_HOMOLOG_PASS }}'
