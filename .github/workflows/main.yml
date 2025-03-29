@@ -1,7 +1,7 @@
 name: "Deploy na main via PR"
 on:
   push:
-    branches: 
+    branches:
       - main
 
   workflow_dispatch:
@@ -9,7 +9,7 @@ on:
       sync:
         description: "File synchronization"
         required: true
-        default: "delta"
+        default: "full"
 
 jobs:
   deploy-master:
@@ -17,18 +17,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Pega o código mais recente"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: "SFTP Deploy"
         uses: milanmk/actions-file-deployer@master
         with:
           remote-protocol: "sftp"
-          remote-host: "62.72.62.166"
-          remote-user: "u305112795"
+          remote-host: "82.180.153.145"
+          remote-user: "u954404731"
           remote-port: "65002"
           remote-password: '${{ secrets.FTP_PRODUCTION_PASS }}'
-          remote-path: "/home/u305112795/domains/myplaces2go.com.br/public_html/backend"
+          remote-path: "/home/u954404731/domains/myplaces2go.com.br/public_html/backend"
           ssh-options: "-oHostKeyAlgorithms=+ssh-rsa"
-          sync: "delta"
+          sync: "full"
