@@ -13,13 +13,13 @@ on:
 jobs:
   deploy-homolog:
     name: "Deploy para a homologação"
-    
+
     if: ${{ github.ref == 'refs/heads/homolog' }}
     runs-on: ubuntu-latest
 
     steps:
       - name: "Pega o código mais recente"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
