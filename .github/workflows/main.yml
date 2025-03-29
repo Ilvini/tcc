@@ -9,7 +9,7 @@ on:
       sync:
         description: "File synchronization"
         required: true
-        default: "full"
+        default: "delta"
 
 jobs:
   deploy-master:
@@ -31,4 +31,4 @@ jobs:
           remote-password: '${{ secrets.FTP_PRODUCTION_PASS }}'
           remote-path: "/home/u954404731/domains/myplaces2go.com.br/public_html/backend"
           ssh-options: "-oHostKeyAlgorithms=+ssh-rsa"
-          sync: "full"
+          sync: "delta"
